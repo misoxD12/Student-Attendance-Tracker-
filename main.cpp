@@ -29,6 +29,22 @@ using namespace std;
 const int MAX_ROWS = 100;
 const int MAX_COLS = 10;
 
+struct AttendanceRow {
+    int studentID;
+    string name;
+    string status; 
+};
+
+struct Column {
+    string name;
+    string type; // "INT" or "TEXT"
+};
+
+AttendanceRow sheet[MAX_ROWS];
+Column columns[MAX_COLS];     
+int currentRowCount = 0;     
+int currentColCount = 0;      
+
 string sheetName = "";
 
 
@@ -45,7 +61,50 @@ void initializeSheet() {
 
 int main() {
 
+    int choice;
+
     initializeSheet();
+
+    do {
+        cout << "\n-------------------------------------------";
+        cout << "\nMAIN MENU";
+        cout << "\n-------------------------------------------";
+        cout << "\n1. Define Columns";
+        cout << "\n2. Insert New Attendance Row";
+        cout << "\n3. View Attendance Sheet";
+        cout << "\n4. Exit";
+        cout << "\n\nEnter choice: ";
+        cin >> choice;
+
+        // Validation loop to handle non-integer inputs for menu
+        while(cin.fail()) {
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cout << "Invalid input. Please enter a number (1-4): ";
+            cin >> choice;
+        }
+
+        switch (choice) {
+            case 1:
+                //defineColumns(); 
+                cout << "1";
+                break;
+            case 2:
+                //insertRow(); 
+                cout << "2";   
+                break;
+            case 3:
+                //viewSheet(); 
+                cout << "3";    
+                break;
+            case 4:
+                cout << "\nExiting program...\n";
+                break;
+            default:
+                cout << "\nError: Invalid choice. Try again.\n";
+        }
+
+    } while (choice != 4);
     
     return 0;
 }
