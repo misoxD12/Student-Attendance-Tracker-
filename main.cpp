@@ -2,7 +2,7 @@
 // Program: AttendanceTracker.cpp
 // Course: CCP6114 Programming Fundamentals
 // Lecture Class: TC1L
-// Tutorial Class: TT4L
+// Tutorial Class: TT3L
 // Trimester: 2530
 // Member_1:
 // Member_2: 
@@ -22,10 +22,30 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 using namespace std;
 
+const int MAX_ROWS = 100;
+const int MAX_COLS = 10;
+
+string sheetName = "";
+
+
+void initializeSheet() {
+    cout << "\n===========================================\n";
+    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 1\n";
+    cout << "===========================================\n";
+    cout << "Enter attendance sheet name: ";
+
+    getline(cin, sheetName);
+    
+    cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
+}
+
 int main() {
+
+    initializeSheet();
     
     return 0;
 }
