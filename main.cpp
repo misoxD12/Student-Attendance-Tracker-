@@ -138,46 +138,52 @@ int main() {
 void defineColumns() { 
     // Ask for column count 
     cout << "\nDefine number of columns (max 10): ";
-    cin >> currentColCount; // Using the global variable
-
-    if (cin.fail() || currentColCount < 1 || currentColCount > MAX_COLS) 
-    {
-        cout << "Error: Please enter a number between 1 and 10: ";
-        cin >> currentColCount;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+    while (!(cin >> currentColCount) || currentColCount < 1 || currentColCount > MAX_COLS) {
+        cout << "Error: Please enter a number between 1 and " << MAX_COLS << ": ";
+        cin.clear(); // Clear error flags
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Dump bad input
     }
-    else
+
+    // 2. Clear buffer to remove the leftover 'Enter' key
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+    // Loop to make each column
+    for (int i = 0; i < currentColCount; i++) 
     {
-        // Loop to make each column
-        for (int i = 0; i < currentColCount; i++) 
+        // Since from the input we are required to Determine the 
+        // column name and data type we have to split the inputs 
+        bool validFormat = false; // Assume the input is false until we check it
+        
+        while (!validFormat) // IF true
         {
-            // Since from the input we are required to Determine the 
-            // column name and data type we have to split the inputs 
-            bool validFormat = false; // Assume the input is false until we check it
-            while (!validFormat) // IF true
-            {
-                string RawInput; // THe var for StudentID (INT)
-                cout << "Enter column " << (i + 1) << " name: "; // User types: StudentID (INT)
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                getline(cin, RawInput);
-                // Locate datatpye from input
-                // Find the "(" and the ")" 
-                // size_t = unsigned integer for position
-                size_t openBracket = RawInput.find('(');        
-                size_t closeBracket = RawInput.find(')');
+            string RawInput; // THe var for StudentID (INT)
+            cout << "Enter column " << (i + 1) << " name: "; // User types: StudentID (INT)
             
-                // Check if "()" exist and is in the right order 
-                if (openBracket != string::npos && closeBracket != string::npos && closeBracket > openBracket) 
-                // string::npos = No position or not found 
+            // *** FIX: Removed cin.ignore() from here so it doesn't delete your input ***
+            
+            getline(cin, RawInput);
+
+            // *** FIX: Added this to handle accidental Empty Enters safely ***
+            if (RawInput.empty()) continue; 
+
+            // Locate datatpye from input
+            // Find the "(" and the ")" 
+            // size_t = unsigned integer for position
+            size_t openBracket = RawInput.find('(');        
+            size_t closeBracket = RawInput.find(')');
+        
+            // Check if "()" exist and is in the right order 
+            if (openBracket != string::npos && closeBracket != string::npos && closeBracket > openBracket) 
+            // string::npos = No position or not found 
+            {
+                string extractedName = RawInput.substr(0, openBracket);
+                // from the string, take from index 0 to openBracket for NAME
+                if (!extractedName.empty() && extractedName.back() == ' ') // Remove extra spaces
                 {
-                    string extractedName = RawInput.substr(0, openBracket);
-                    // from the string, take from index 0 to openBracket for NAME
-                    if (!extractedName.empty() && extractedName.back() == ' ') // Remove extra spaces
-                    {
-                        extractedName.pop_back();
-                    }
+                    extractedName.pop_back();
+                }
+            
                 // Extract Type
                 // Start after '(', Length = (9 - 5 - 1) = 3
                 string extractedType = RawInput.substr(openBracket + 1, closeBracket - openBracket - 1);
@@ -186,26 +192,24 @@ void defineColumns() {
                 while (!extractedType.empty() && extractedType.front() == ' ') extractedType.erase(0, 1);
                 while (!extractedType.empty() && extractedType.back() == ' ') extractedType.pop_back();
 
-                    // Validate datatype
-                    if (extractedType == "INT" || extractedType == "TEXT") 
-                    {
-                        columns[i].name = extractedName;
-                        columns[i].type = extractedType;
-                        validFormat = true; // Breaks the loop
-                    } 
-                    else 
-                    {
-                        cout << "Error: Type must be exactly INT or TEXT inside brackets. Found: \"" << extractedType << "\"\n";
-                    }
-                } 
-                else
+                // Validate datatype
+                if (extractedType == "INT" || extractedType == "TEXT") 
                 {
-                    cout << "Error: Invalid format. Please use format: Name (TYPE). E.g., StudentID (INT)\n";
+                    columns[i].name = extractedName;
+                    columns[i].type = extractedType;
+                    validFormat = true; // Breaks the loop
+                } 
+                else 
+                {
+                    cout << "Error: Type must be exactly INT or TEXT inside brackets. Found: \"" << extractedType << "\"\n";
                 }
             } 
-        }
+            else
+            {
+                cout << "Error: Invalid format. Please use format: Name (TYPE). E.g., StudentID (INT)\n";
+            }
+        } 
     }
     cout << "\nSheet structure created successfully.\n";
-    
 }
 
