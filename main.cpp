@@ -59,6 +59,29 @@ void initializeSheet() {
     cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
 }
 
+//viewSheet (CSV Format)
+void viewSheet() {
+
+    cout << endl;
+    cout << "-------------------------------------------" << endl;
+    cout << "View Attendance Sheet (CSV Mode)" << endl;
+    cout << "-------------------------------------------" <<endl;
+
+    // Print column headers
+    for (int i = 0; i < currentColCount; i++) {
+        cout << columns[i].name;
+        if (i < currentColCount - 1) cout << ", ";
+    }
+    cout << endl;
+
+    // Print attendance rows
+    for (int i = 0; i < currentRowCount; i++) {
+        cout << sheet[i].studentID << ", ";
+        cout << sheet[i].name << ", ";
+        cout << sheet[i].status << endl;
+    }
+}
+
 int main() {
 
     int choice;
@@ -95,7 +118,7 @@ int main() {
                 break;
             case 3:
                 //viewSheet(); 
-                cout << "3";    
+                viewSheet();  
                 break;
             case 4:
                 cout << "\nExiting program...\n";
