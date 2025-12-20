@@ -101,38 +101,6 @@ void insertRow() {
     }
 }
 
-void updateRow(){
-    string id;
-    bool found = false;
-    cin.ignore(1000, '\n'); // Clear input
-    cout << "Enter Student ID to u want to update: "; 
-    getline(cin, studentID);
-    
-    for (int i = 0; i < current_size; i++) {
-        if (sheet[i].studentID == id) {
-            found = true;
-            cout << "Record Found! Current Name: " << sheet[i].name << endl;
-
-            string newName;
-            cout << "Enter New Name (or type 'skip' to keep current name): ";
-            
-            getline(cin, newName);
-
-            if (newName != "skip") {
-                sheet[i].name = newName;
-            }
-
-            cout << "Enter new status: ";
-            cin >> sheet[i].status;
-
-            cout << "Changes saved successfully!" << endl;
-            break;
-        }
-    }
-    if (!found) {
-        cout << "Error: ID not found." << endl;
-    }
-}
 
 int main() {
 
