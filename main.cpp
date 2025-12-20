@@ -85,6 +85,26 @@ void viewSheet() {
     }
 }
 
+
+void insertRow() {
+    if (currentRowCount < 100) {
+        cout<<"YOUR ID: "<<endl;
+        cin >> sheet[currentRowCount].studentID;
+
+        cout<<"YOUR NAME: "<<endl;
+        cin >> sheet[currentRowCount].name;
+
+        cout<<"YOUR PRESENCE : "<<endl;
+        cin >> sheet[currentRowCount].status;
+        currentRowCount++;
+
+        cout << "Student status is added successfully!!!" << endl;
+    } else {
+        cout << "Attendance sheet is full!" << endl;
+    }
+}
+
+
 int main() {
 
     int choice;
@@ -116,7 +136,7 @@ int main() {
                 defineColumns();
                 break;
             case 2:
-                //insertRow(); 
+                insertRow();
                 cout << "2";   
                 break;
             case 3:
