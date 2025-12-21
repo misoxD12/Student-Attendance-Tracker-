@@ -138,9 +138,12 @@ void viewSheet() {
 
     // Print attendance rows
     for (int i = 0; i < currentRowCount; i++) {
-        cout << sheet[i].studentID << ", ";
-        cout << sheet[i].name << ", ";
-        cout << sheet[i].status << endl;
+        // Inner Loop: Print each cell for this student
+        for (int j = 0; j < currentColCount; j++) {
+            cout << sheet[i].cells[j];
+            if (j < currentColCount - 1) cout << ", ";
+        }
+        cout << endl;
     }
 }
 
