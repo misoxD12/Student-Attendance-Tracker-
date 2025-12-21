@@ -121,6 +121,11 @@ void initializeSheet() {
 
 void viewSheet() {
 
+    if (currentRowCount == 0) {
+        cout << "\nSheet is empty.\n";
+        return;
+    }
+
     cout << endl;
     cout << "-------------------------------------------" << endl;
     cout << "View Attendance Sheet (CSV Mode)" << endl;
