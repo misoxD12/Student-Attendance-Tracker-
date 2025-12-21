@@ -34,20 +34,46 @@ Student student_amount[100];/*this is an array of structures to store multiple s
 int current_size = 0;
 
 void insertRow() {
-    if (current_size < 100) {
-        cout<<"YOUR ID: "<<endl;
-        cin >> student_amount[current_size].id;
+    // 1. Safety Check: Make sure columns exist first!
+    if (currentColCount == 0) {
+        cout << "Error: You must define columns (Option 1) before adding data." << endl;
+        return;
+    }
 
-        cout<<"YOUR NAME: "<<endl;
-        cin >> student_amount[current_size].name;
+    // 2. Check if the sheet is full
+    if (currentRowCount < MAX_ROWS) {
+        cout << "\n-------------------------------------------" << endl;
+        cout << "Insert New Attendance Row" << endl;
+        cout << "-------------------------------------------" << endl;
 
-        cout<<"YOUR PRESENCE (1 for present, 0 for absent): "<<endl;
-        cin >> student_amount[current_size].present;
-        current_size++;
+        // --- COLUMN 1 (ID) ---
+        // Instead of hardcoding "YOUR ID", we use columns[0].name
+        cout << "Enter " << columns[0].name << ": "; 
+        cin >> sheet[currentRowCount].studentID;
 
-        cout << "Student status is added successfully!!!" << endl;
+        // Error Handling for ID (Member 4/All responsibility)
+        while(cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a number for " << columns[0].name << ": ";
+            cin >> sheet[currentRowCount].studentID;
+        }
+
+        // --- COLUMN 2 (NAME) ---
+        cout << "Enter " << columns[1].name << ": ";
+        cin.ignore(); // Clear the buffer before getline
+        getline(cin, sheet[currentRowCount].name);
+
+        // --- COLUMN 3 (STATUS) ---
+        cout << "Enter " << columns[2].name << ": ";
+        cin >> sheet[currentRowCount].status;
+
+        // Increment the counter
+        currentRowCount++;
+        cout << "Row inserted successfully." << endl;
+
     } else {
-        cout << "Attendance sheet is full!" << endl;
+        cout << "Error: Attendance sheet is full!" << endl;
     }
 }
 
