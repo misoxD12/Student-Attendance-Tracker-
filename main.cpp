@@ -34,24 +34,22 @@ Student student_amount[100];/*this is an array of structures to store multiple s
 int current_size = 0;
 
 void insertRow() {
-    // 1. Safety Check: Make sure columns exist first!
     if (currentColCount == 0) {
         cout << "Error: You must define columns (Option 1) before adding data." << endl;
         return;
     }
 
-    // 2. Check if the sheet is full
+
     if (currentRowCount < MAX_ROWS) {
         cout << "\n-------------------------------------------" << endl;
         cout << "Insert New Attendance Row" << endl;
         cout << "-------------------------------------------" << endl;
 
-        // --- COLUMN 1 (ID) ---
-        // Instead of hardcoding "YOUR ID", we use columns[0].name
+
         cout << "Enter " << columns[0].name << ": "; 
         cin >> sheet[currentRowCount].studentID;
 
-        // Error Handling for ID (Member 4/All responsibility)
+   
         while(cin.fail()) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -80,7 +78,7 @@ void insertRow() {
 void updateRow(){
     string id;
     bool found = false;
-    cin.ignore(1000, '\n'); // Clear input buffer242uc242fc
+    cin.ignore(1000, '\n'); // Clear input 
     cout << "Enter Student ID to u want to update: "; 
     getline(cin, id);
     
