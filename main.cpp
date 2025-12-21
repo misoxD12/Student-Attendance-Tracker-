@@ -2,7 +2,7 @@
 // Program: AttendanceTracker.cpp
 // Course: CCP6114 Programming Fundamentals
 // Lecture Class: TC1L
-// Tutorial Class: TT3L
+// Tutorial Class: TT4L
 // Trimester: 2530
 // Member_1:
 // Member_2: 
@@ -62,7 +62,6 @@ void initializeSheet() {
     cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
 }
 
-//viewSheet (CSV Format)
 void viewSheet() {
 
     cout << endl;
@@ -85,22 +84,43 @@ void viewSheet() {
     }
 }
 
-
 void insertRow() {
-    if (currentRowCount < 100) {
-        cout<<"YOUR ID: "<<endl;
+    if (currentColCount == 0) {
+        cout << "Error: You must define columns (Option 1) before adding data." << endl;
+        return;
+    }
+
+
+    if (currentRowCount < MAX_ROWS) {
+        cout << "\n-------------------------------------------" << endl;
+        cout << "Insert New Attendance Row" << endl;
+        cout << "-------------------------------------------" << endl;
+
+
+        cout << "Enter " << columns[0].name << ": "; 
         cin >> sheet[currentRowCount].studentID;
 
-        cout<<"YOUR NAME: "<<endl;
-        cin >> sheet[currentRowCount].name;
+   
+        while(cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a number for " << columns[0].name << ": ";
+            cin >> sheet[currentRowCount].studentID;
+        }
 
-        cout<<"YOUR PRESENCE : "<<endl;
+        cout << "Enter " << columns[1].name << ": ";
+        cin.ignore(); // Clear the buffer before getline
+        getline(cin, sheet[currentRowCount].name);
+      
+        cout << "Enter " << columns[2].name << ": ";
         cin >> sheet[currentRowCount].status;
-        currentRowCount++;
 
-        cout << "Student status is added successfully!!!" << endl;
+        // Increment the counter
+        currentRowCount++;
+        cout << "Row inserted successfully." << endl;
+
     } else {
-        cout << "Attendance sheet is full!" << endl;
+        cout << "Error: Attendance sheet is full!" << endl;
     }
 }
 
@@ -151,6 +171,7 @@ int main() {
         }
 
     } while (choice != 4);
+
     
     return 0;
 }
