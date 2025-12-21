@@ -10,9 +10,7 @@ const int MAX_ROWS = 100;
 const int MAX_COLS = 10;
 
 struct AttendanceRow {
-    int studentID;
-    string name;
-    string status; 
+    string cells[MAX_COLS];
 };
 
 struct Column {
