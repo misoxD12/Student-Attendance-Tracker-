@@ -36,8 +36,8 @@ void defineColumns() {
         cin.clear(); // Clear error flags
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Dump bad input
     }
-
-    // 2. Clear buffer to remove the leftover 'Enter' key
+    currentRowCount = 0; // This makes sure the Row count is 0 everytime the columns are defined 
+    // Clear buffer to remove the leftover 'Enter' key entered in by the user 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
     // Loop to make each column
@@ -51,9 +51,7 @@ void defineColumns() {
         {
             string RawInput; // THe var for StudentID (INT)
             cout << "Enter column " << (i + 1) << " name: "; // User types: StudentID (INT)
-            
-            // *** FIX: Removed cin.ignore() from here so it doesn't delete your input ***
-            
+                        
             getline(cin, RawInput);
 
             // *** FIX: Added this to handle accidental Empty Enters safely ***
@@ -76,7 +74,7 @@ void defineColumns() {
                     extractedName.pop_back();
                 }
             
-                // Extract Type
+                // Extract Type; the following is just as an exmaple for reference 
                 // Start after '(', Length = (9 - 5 - 1) = 3
                 string extractedType = RawInput.substr(openBracket + 1, closeBracket - openBracket - 1);
 
@@ -84,7 +82,7 @@ void defineColumns() {
                 while (!extractedType.empty() && extractedType.front() == ' ') extractedType.erase(0, 1);
                 while (!extractedType.empty() && extractedType.back() == ' ') extractedType.pop_back();
 
-                // Validate datatype
+                // Validate datatype by user
                 if (extractedType == "INT" || extractedType == "TEXT") 
                 {
                     columns[i].name = extractedName;
@@ -167,6 +165,7 @@ void insertRow() {
             if (columns[i].type == "INT") {
                 // LOGIC FOR INTEGERS (ID)
                 int tempVal;
+                // Note: We don't need cin.ignore BEFORE this because cin >> ignores whitespace
                 while(!(cin >> tempVal)) {
                     cout << "Error: " << columns[i].name << " must be a number (INT). Try again: ";
                     cin.clear();
@@ -175,6 +174,7 @@ void insertRow() {
                 
                 sheet[currentRowCount].cells[i] = to_string(tempVal);
                 
+                // We DO need cin.ignore AFTER this to clean up for the next loop
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
             } 
             else {
