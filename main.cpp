@@ -25,7 +25,18 @@ int currentColCount = 0;
 
 string sheetName = "";
 
-//Functions 
+//Functions
+
+void initializeSheet() {
+    cout << "\n===========================================\n";
+    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 1\n";
+    cout << "===========================================\n";
+    cout << "Enter attendance sheet name: ";
+
+    getline(cin, sheetName);
+    
+    cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
+}
 
 void defineColumns() { 
 
@@ -108,46 +119,6 @@ void defineColumns() {
 }
 
 
-void initializeSheet() {
-    cout << "\n===========================================\n";
-    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 1\n";
-    cout << "===========================================\n";
-    cout << "Enter attendance sheet name: ";
-
-    getline(cin, sheetName);
-    
-    cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
-}
-
-void viewSheet() {
-    if (currentRowCount == 0) {
-        cout << "\nSheet is empty.\n";
-        return;
-    }
-
-    cout << endl;
-    cout << "-------------------------------------------" << endl;
-    cout << "View Attendance Sheet (CSV Mode)" << endl;
-    cout << "-------------------------------------------" << endl;
-
-    // 1. Print Headers
-    for (int i = 0; i < currentColCount; i++) {
-        cout << columns[i].name;
-        if (i < currentColCount - 1) cout << ", ";
-    }
-    cout << endl;
-
-    // 2. Print Data Rows
-    for (int i = 0; i < currentRowCount; i++) {
-        // Inner Loop: Print each cell for this student
-        for (int j = 0; j < currentColCount; j++) {
-            cout << sheet[i].cells[j];
-            if (j < currentColCount - 1) cout << ", ";
-        }
-        cout << endl;
-    }
-}
-
 void insertRow() {
     if (currentColCount == 0) {
         cout << "Error: You must define columns first." << endl;
@@ -195,7 +166,36 @@ void insertRow() {
     }
 }
 
+void viewSheet() {
+    if (currentRowCount == 0) {
+        cout << "\nSheet is empty.\n";
+        return;
+    }
 
+    cout << endl;
+    cout << "-------------------------------------------" << endl;
+    cout << "View Attendance Sheet (CSV Mode)" << endl;
+    cout << "-------------------------------------------" << endl;
+
+    // 1. Print Headers
+    for (int i = 0; i < currentColCount; i++) {
+        cout << columns[i].name;
+        if (i < currentColCount - 1) cout << ", ";
+    }
+    cout << endl;
+
+    // 2. Print Data Rows
+    for (int i = 0; i < currentRowCount; i++) {
+        // Inner Loop: Print each cell for this student
+        for (int j = 0; j < currentColCount; j++) {
+            cout << sheet[i].cells[j];
+            if (j < currentColCount - 1) cout << ", ";
+        }
+        cout << endl;
+    }
+}
+
+//MAIN 
 int main() {
 
     int choice;
@@ -214,7 +214,7 @@ int main() {
         cout << "\n\nEnter choice: ";
         cin >> choice;
 
-        // Validation loop to handle non-integer inputs for menu
+        //Validation
         while(cin.fail()) {
             cin.clear(); 
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
