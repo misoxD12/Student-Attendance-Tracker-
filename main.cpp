@@ -151,7 +151,6 @@ void insertRow() {
     }
 
     if (currentRowCount < MAX_ROWS) {
-        // *** FIX: Clear the buffer here to eat the "Menu Enter Key" ***
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         cout << "\n-------------------------------------------" << endl;
