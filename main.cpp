@@ -10,9 +10,7 @@ const int MAX_ROWS = 100;
 const int MAX_COLS = 10;
 
 struct AttendanceRow {
-    int studentID;
-    string name;
-    string status; 
+    string cells[MAX_COLS];
 };
 
 struct Column {
@@ -38,8 +36,8 @@ void defineColumns() {
         cin.clear(); // Clear error flags
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Dump bad input
     }
-
-    // 2. Clear buffer to remove the leftover 'Enter' key
+    currentRowCount = 0; // This makes sure the Row count is 0 everytime the columns are defined 
+    // Clear buffer to remove the leftover 'Enter' key entered in by the user 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
     // Loop to make each column
@@ -53,9 +51,7 @@ void defineColumns() {
         {
             string RawInput; // THe var for StudentID (INT)
             cout << "Enter column " << (i + 1) << " name: "; // User types: StudentID (INT)
-            
-            // *** FIX: Removed cin.ignore() from here so it doesn't delete your input ***
-            
+                        
             getline(cin, RawInput);
 
             // *** FIX: Added this to handle accidental Empty Enters safely ***
@@ -78,7 +74,7 @@ void defineColumns() {
                     extractedName.pop_back();
                 }
             
-                // Extract Type
+                // Extract Type; the following is just as an exmaple for reference 
                 // Start after '(', Length = (9 - 5 - 1) = 3
                 string extractedType = RawInput.substr(openBracket + 1, closeBracket - openBracket - 1);
 
@@ -86,7 +82,7 @@ void defineColumns() {
                 while (!extractedType.empty() && extractedType.front() == ' ') extractedType.erase(0, 1);
                 while (!extractedType.empty() && extractedType.back() == ' ') extractedType.pop_back();
 
-                // Validate datatype
+                // Validate datatype by user
                 if (extractedType == "INT" || extractedType == "TEXT") 
                 {
                     columns[i].name = extractedName;
@@ -120,7 +116,6 @@ void initializeSheet() {
 }
 
 void viewSheet() {
-
     if (currentRowCount == 0) {
         cout << "\nSheet is empty.\n";
         return;
@@ -129,60 +124,71 @@ void viewSheet() {
     cout << endl;
     cout << "-------------------------------------------" << endl;
     cout << "View Attendance Sheet (CSV Mode)" << endl;
-    cout << "-------------------------------------------" <<endl;
+    cout << "-------------------------------------------" << endl;
 
-    // Print column headers
+    // 1. Print Headers
     for (int i = 0; i < currentColCount; i++) {
         cout << columns[i].name;
         if (i < currentColCount - 1) cout << ", ";
     }
     cout << endl;
 
-    // Print attendance rows
+    // 2. Print Data Rows
     for (int i = 0; i < currentRowCount; i++) {
-        cout << sheet[i].studentID << ", ";
-        cout << sheet[i].name << ", ";
-        cout << sheet[i].status << endl;
+        // Inner Loop: Print each cell for this student
+        for (int j = 0; j < currentColCount; j++) {
+            cout << sheet[i].cells[j];
+            if (j < currentColCount - 1) cout << ", ";
+        }
+        cout << endl;
     }
 }
 
 void insertRow() {
     if (currentColCount == 0) {
-        cout << "Error: You must define columns first before adding data." << endl;
+        cout << "Error: You must define columns first." << endl;
         return;
     }
 
-
     if (currentRowCount < MAX_ROWS) {
+        // *** FIX: Clear the buffer here to eat the "Menu Enter Key" ***
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         cout << "\n-------------------------------------------" << endl;
         cout << "Insert New Attendance Row" << endl;
         cout << "-------------------------------------------" << endl;
 
-
-        cout << "Enter " << columns[0].name << ": "; 
-        cin >> sheet[currentRowCount].studentID;
-
-   
-        while(cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a number for " << columns[0].name << ": ";
-            cin >> sheet[currentRowCount].studentID;
+        // DYNAMIC LOOP: Run once for every column the user defined
+        for (int i = 0; i < currentColCount; i++) {
+            
+            cout << "Enter " << columns[i].name << ": ";
+            
+            if (columns[i].type == "INT") {
+                // LOGIC FOR INTEGERS (ID)
+                int tempVal;
+                // Note: We don't need cin.ignore BEFORE this because cin >> ignores whitespace
+                while(!(cin >> tempVal)) {
+                    cout << "Error: " << columns[i].name << " must be a number (INT). Try again: ";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                
+                sheet[currentRowCount].cells[i] = to_string(tempVal);
+                
+                // We DO need cin.ignore AFTER this to clean up for the next loop
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            } 
+            else {
+                // LOGIC FOR TEXT (Name)
+                getline(cin, sheet[currentRowCount].cells[i]);
+            }
         }
 
-        cout << "Enter " << columns[1].name << ": ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the buffer before getline
-        getline(cin, sheet[currentRowCount].name);
-      
-        cout << "Enter " << columns[2].name << ": ";
-        cin >> sheet[currentRowCount].status;
-
-        // Increment the counter
         currentRowCount++;
         cout << "Row inserted successfully." << endl;
 
     } else {
-        cout << "Error: Attendance sheet is full!" << endl;
+        cout << "Error: Sheet is full!" << endl;
     }
 }
 
