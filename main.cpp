@@ -50,7 +50,7 @@ void defineColumns() {
         while (!validFormat) // IF true
         {
             string RawInput; // THe var for StudentID (INT)
-            cout << "Enter column " << (i + 1) << " name: "; // User types: StudentID (INT)
+            cout << "Enter column " << (i + 1) << " name (Format: Name (TYPE)) : "; // User types: StudentID (INT)
                         
             getline(cin, RawInput);
 
