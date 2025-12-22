@@ -28,6 +28,10 @@ string sheetName = "";
 //Functions 
 
 void defineColumns() { 
+
+    cout << "\n-------------------------------------------";
+    cout << "\nDefine Columns";
+    cout << "\n-------------------------------------------";
     // Ask for column count 
     cout << "\nDefine number of columns (max 10): ";
     
