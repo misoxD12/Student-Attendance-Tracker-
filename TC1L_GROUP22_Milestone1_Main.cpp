@@ -1,3 +1,22 @@
+// *********************************************************
+// Program: TC1L_GROUP22_Milestone1_Main.cpp
+// Course: CCP6114 Programming Fundamentals
+// Lecture Class: TC1L
+// Tutorial Class: TT3L
+// Trimester: 2530
+// Member_1: 252UC242SE | CHAI MING SONG | CHAI.MING.SONG1@student.mmu.edu.my | 016-9320289
+// Member_2: 252UC242ZC | LEONG KA KIT | LEONG.KA.KIT1@student.mmu.edu.my | 011-58606375
+// Member_3: 252UC242YP | YIP YU ZHE | YIP.YU.ZHE1@student.mmu.edu.my | 018-2171599
+// Member_4: 252UC241NW | HARSIMRANJEET SINGH SRAU A/L GURDEV SINGH |  HARSIMRANJEET.SINGH.SRAU1@student.mmu.edu.my | 011-11928326
+// *********************************************************
+// Task Distribution (Milestone 1 - Technical Breakdown)
+// Member_1: Build System Skeleton (Main Loop/Switch), Define Global Structures & Variables, Initialization
+// Member_2: Implement Insert Row Logic (Input Validation Loop)
+// Member_3: Implement View Sheet Logic (Output Formatting Loop)
+// Member_4: Implement Define Columns Logic (String Parsing & Dynamic Setup)
+// *********************************************************
+
+
 #include <iostream>
 #include <string>
 #include <limits>
@@ -6,15 +25,15 @@ using namespace std;
 
 
 //Constants 
-const int MAX_ROWS = 100;
-const int MAX_COLS = 10;
+const int MAX_ROWS = 100; //Max students
+const int MAX_COLS = 10;  //Max columns
 
 struct AttendanceRow {
-    string cells[MAX_COLS];
+    string cells[MAX_COLS]; //Stores cell values for each column in a row
 };
 
 struct Column {
-    string name;
+    string name; 
     string type; 
 };
 
@@ -140,7 +159,6 @@ void insertRow() {
             if (columns[i].type == "INT") {
                 // LOGIC FOR INTEGERS (ID)
                 int tempVal;
-                // Note: We don't need cin.ignore BEFORE this because cin >> ignores whitespace
                 while(!(cin >> tempVal)) {
                     cout << "Error: " << columns[i].name << " must be a number (INT). Try again: ";
                     cin.clear();
