@@ -200,6 +200,10 @@ void viewSheet() {
     cout << "-------------------------------------------" << endl;
     cout << "View Attendance Sheet (CSV Mode)" << endl;
     cout << "-------------------------------------------" << endl;
+    cout << "Sheet Name: " << sheetName << "\n";
+    cout << "Total Rows: " << currentRowCount << ", Total Columns: " << currentColCount << "\n";
+    cout << "-------------------------------------------" << "\n";
+
 
     // 1. Print Headers
     for (int i = 0; i < currentColCount; i++) {
@@ -230,6 +234,7 @@ int main() {
     do {
         cout << "\n-------------------------------------------";
         cout << "\nMAIN MENU";
+        cout << "\nCurrent Sheet: " << sheetName;
         cout << "\n-------------------------------------------";
         cout << "\n1. Define Columns";
         cout << "\n2. Insert New Attendance Row";
