@@ -10,7 +10,7 @@
 // Member_4: 252UC241NW | HARSIMRANJEET SINGH SRAU A/L GURDEV SINGH |  HARSIMRANJEET.SINGH.SRAU1@student.mmu.edu.my | 011-11928326
 // *********************************************************
 // Task Distribution (Milestone 1 - Technical Breakdown)
-// Member_1: Build System Skeleton (Main Loop/Switch), Define Global Structures & Variables, Initialization
+// Member_1: Build System Skeleton (Main Loop/Switch), Define Global Structures & Variables, Initialization & Code Refinement 
 // Member_2: Implement Insert Row Logic (Input Validation Loop)
 // Member_3: Implement View Sheet Logic (Output Formatting Loop)
 // Member_4: Implement Define Columns Logic (String Parsing & Dynamic Setup)
