@@ -70,7 +70,13 @@ void defineColumns() {
         cin.clear(); // Clear error flags
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Dump bad input
     }
-    currentRowCount = 0; // This makes sure the Row count is 0 everytime the columns are defined 
+
+    if (currentRowCount > 0) {
+        cout << "Warning: Redefining columns will clear existing data.\n";
+        currentRowCount = 0; // Reset row count
+        cout << "Current rows cleared.\n";
+    } 
+    
     // Clear buffer to remove the leftover 'Enter' key entered in by the user 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
