@@ -2,7 +2,7 @@
 // Program: TC1L_GROUP22_Milestone2_Main.cpp
 // Course: CCP6114 Programming Fundamentals
 // Lecture Class: TC1L
-// Tutorial Class: TT3L
+// Tutorial Class: TT3L 
 // Trimester: 2530
 // Member_1: 252UC242SE | CHAI MING SONG | CHAI.MING.SONG1@student.mmu.edu.my | 016-9320289
 // Member_2: 252UC242ZC | LEONG KA KIT | LEONG.KA.KIT1@student.mmu.edu.my | 011-58606375
@@ -20,6 +20,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <fstream>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ int currentColCount = 0;
 
 string sheetName = "";
 
-//Functions
+//Milestone 1 Functions
 
 void initializeSheet() {
     cout << "\n===========================================\n";
@@ -223,6 +224,26 @@ void viewSheet() {
     }
 }
 
+//Milestone 2 Functions
+
+
+void updateRow() {
+    //ask for ID, find it, and change it
+}
+
+void deleteRow() {
+    //ind ID, remove it, and shift array up
+}
+
+void saveFile() {
+    //write 'sheet[]' to "attendance.txt"
+}
+
+void loadFile() {
+    //read "attendance.txt" back into 'sheet[]'
+}
+
+
 //MAIN 
 int main() {
 
@@ -240,6 +261,9 @@ int main() {
         cout << "\n2. Insert New Attendance Row";
         cout << "\n3. View Attendance Sheet";
         cout << "\n4. Exit";
+        cout << "\n4. Update Row";        
+        cout << "\n5. Delete Row";      
+        cout << "\n6. Save & Exit";       
         cout << "\n\nEnter choice: ";
         cin >> choice;
 
