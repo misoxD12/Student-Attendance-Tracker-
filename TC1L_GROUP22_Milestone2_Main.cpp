@@ -260,7 +260,6 @@ int main() {
         cout << "\n1. Define Columns";
         cout << "\n2. Insert New Attendance Row";
         cout << "\n3. View Attendance Sheet";
-        cout << "\n4. Exit";
         cout << "\n4. Update Row";        
         cout << "\n5. Delete Row";      
         cout << "\n6. Save & Exit";       
@@ -279,21 +278,34 @@ int main() {
             case 1:
                 defineColumns();
                 break;
+
             case 2:
                 insertRow(); 
                 break;
+
             case 3:
                 viewSheet();  
                 break;
+
             case 4:
-                cout << "\nExiting program...\n";
+                updateRow();  
                 break;
+
+            case 5:
+                deleteRow();  
+                break;
+
+            case 6:
+                saveFile();  
+                cout << "\nData saved. Exiting program...\n";
+                break;
+
             default:
                 cout << "\nError: Invalid choice. Try again.\n";
         }
 
-    } while (choice != 4);
+    } while (choice != 6);
 
     
     return 0;
-}
+}   
