@@ -226,6 +226,9 @@ void viewSheet() {
 
 //Milestone 2 Functions
 
+void createTerm() {
+    //ask for term
+}
 
 void updateRow() {
     //ask for ID, find it, and change it
@@ -233,6 +236,10 @@ void updateRow() {
 
 void deleteRow() {
     //ind ID, remove it, and shift array up
+}
+
+void countRows() {
+    //print 
 }
 
 void saveFile() {
@@ -249,7 +256,10 @@ int main() {
 
     int choice;
 
-    initializeSheet();
+    //loadFile();
+
+    
+        initializeSheet();
 
     //Main menu
     do {
@@ -261,8 +271,9 @@ int main() {
         cout << "\n2. Insert New Attendance Row";
         cout << "\n3. View Attendance Sheet";
         cout << "\n4. Update Row";        
-        cout << "\n5. Delete Row";      
-        cout << "\n6. Save & Exit";       
+        cout << "\n5. Delete Row";
+        cout << "\n6. Count Row";     
+        cout << "\n7. Save & Exit";       
         cout << "\n\nEnter choice: ";
         cin >> choice;
 
@@ -270,7 +281,7 @@ int main() {
         while(cin.fail()) {
             cin.clear(); 
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-            cout << "Invalid input. Please enter a number (1-4): ";
+            cout << "Invalid input. Please enter a number (1-7): ";
             cin >> choice;
         }
 
@@ -296,6 +307,10 @@ int main() {
                 break;
 
             case 6:
+                countRows();
+                break;
+            
+            case 7:
                 saveFile();  
                 cout << "\nData saved. Exiting program...\n";
                 break;
@@ -304,7 +319,7 @@ int main() {
                 cout << "\nError: Invalid choice. Try again.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 
     
     return 0;
