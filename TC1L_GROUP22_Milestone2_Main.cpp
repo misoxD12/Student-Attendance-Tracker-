@@ -45,6 +45,8 @@ int currentColCount = 0;
 
 string sheetName = "";
 
+string termName = "";
+
 //Milestone 1 Functions
 
 void initializeSheet() {
@@ -226,8 +228,75 @@ void viewSheet() {
 
 //Milestone 2 Functions
 
+//generate sheet filename
+string getSheetFileName() {
+    if (sheetName.empty()) {
+        return "default.csv";
+    } 
+    else {
+        return sheetName + ".csv";
+    }
+}
+
+//generate database filename
+string getDatabaseFileName() {
+    if (termName.empty()) {
+        return "DefaultTerm.csv";
+    } 
+    else {
+        return termName + ".csv";
+    }
+}
+
+void databaseIndex(){
+    string sheetfile = getSheetFileName();
+    string dbfile = getDatabaseFileName();
+
+    ifstream inputFile(dbfile);
+    //store each line
+    string line;
+    bool Existsornot = false; 
+
+    if(inputFile.is_open()){
+        while (getline(inputFile, line)){
+            if(line == sheetfile){
+                Existsornot = true;
+                break;
+            }
+        }
+
+    }
+    inputFile.close();
+
+    if(!Existsornot){
+        ofstream outputFile(dbfile, ios::app);
+
+        if(outputFile.is_open()){
+            outputFile << sheetfile << endl;
+            outputFile.close();
+            cout << "Database Added " << sheetfile << " to database index " << dbfile << ".\n";
+        }
+        else{
+            cout << "Error. Unable to update file.\n";
+        }
+    }
+}
+
 void createTerm() {
-    //ask for term
+    cout << "\n===========================================\n";
+    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2\n";
+    cout << "===========================================\n";
+    cout << "Create School Term (Database)";
+    cout << "\n-------------------------------------------";
+    cout << "\nEnter term name: ";
+    getline(cin, termName);
+
+    //check or create
+    ofstream outputFile(getDatabaseFileName(), ios::app); 
+    outputFile.close();
+
+     cout << "Database \"" << termName << "\" created/loaded (Index: " << getDatabaseFileName() << ").\n";
+
 }
 
 void updateRow() {
@@ -239,7 +308,8 @@ void deleteRow() {
 }
 
 void countRows() {
-    //print 
+    cout << "\nCount Rows\n-----------------------";
+    cout << "\nNumber of rows: " << currentRowCount << "\n";
 }
 
 void saveFile() {
@@ -250,16 +320,46 @@ void loadFile() {
     //read "attendance.txt" back into 'sheet[]'
 }
 
+void loadOrInitializeSheet() {
+    cout << "\n-------------------------------------------";
+    cout << "\nLoad or Create Sheet";
+    cout << "\n-------------------------------------------";
+
+    //show available sheets
+    string dbFile = getDatabaseFileName();
+    ifstream inputFile(dbFile);
+
+    if (inputFile.is_open()) {
+        cout << "Available Sheets in " << termName << ":\n";
+
+        string line;
+        while(getline(inputFile, line)) {
+            cout << " - " << line << "\n";
+        }
+        inputFile.close();   
+    }
+
+    cout << "\nEnter sheet name to open (e.g. Week1): ";
+    getline(cin, sheetName);
+
+    string filename = getSheetFileName(); 
+    ifstream BANANA(filename); 
+
+    //
+}
+
 
 //MAIN 
 int main() {
 
     int choice;
 
-    //loadFile();
+    //createTerm(); 
+
+    //loadOrInitializeSheet();
 
     
-        initializeSheet();
+    initializeSheet();
 
     //Main menu
     do {
