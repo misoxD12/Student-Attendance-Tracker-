@@ -45,6 +45,8 @@ int currentColCount = 0;
 
 string sheetName = "";
 
+string termName = "";
+
 //Milestone 1 Functions
 
 void initializeSheet() {
@@ -225,6 +227,60 @@ void viewSheet() {
 }
 
 //Milestone 2 Functions
+
+//generate sheet filename
+string getSheetFileName() {
+    if (sheetName.empty()) {
+        return "default.csv";
+    } 
+    else {
+        return sheetName + ".csv";
+    }
+}
+
+//generate database filename
+string getDatabaseFileName() {
+    if (termName.empty()) {
+        return "DefaultTerm.csv";
+    } 
+    else {
+        return termName + ".csv";
+    }
+}
+
+void databaseIndex(){
+    string sheetfile = getSheetFileName();
+    string dbfile = getDatabaseFileName();
+
+    ifstream inputFile(dbfile);
+    //store each line
+    string line;
+    bool Existsornot = false; 
+
+    if(inputFile.is_open()){
+        while (getline(inputFile, line)){
+            if(line == sheetfile){
+                Existsornot = true;
+                break;
+            }
+        }
+
+    }
+    inputFile.close();
+
+    if(!Existsornot){
+        ofstream outputFile(dbfile, ios::app);
+
+        if(outputFile.is_open()){
+            outputFile << sheetfile << endl;
+            outputFile.close();
+            cout << "Database Added " << sheetfile << " to database index " << dbfile << ".\n";
+        }
+        else{
+            cout << "Error. Unable to update file.\n";
+        }
+    }
+}
 
 void createTerm() {
     //ask for term
