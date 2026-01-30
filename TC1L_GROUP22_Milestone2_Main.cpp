@@ -283,7 +283,20 @@ void databaseIndex(){
 }
 
 void createTerm() {
-    //ask for term
+    cout << "\n===========================================\n";
+    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2\n";
+    cout << "===========================================\n";
+    cout << "Create School Term (Database)";
+    cout << "\n-------------------------------------------";
+    cout << "\nEnter term name: ";
+    getline(cin, termName);
+
+    //check or create
+    ofstream outputFile(getDatabaseFileName(), ios::app); 
+    outputFile.close();
+
+     cout << "Database \"" << termName << "\" created/loaded (Index: " << getDatabaseFileName() << ").\n";
+
 }
 
 void updateRow() {
@@ -308,7 +321,31 @@ void loadFile() {
 }
 
 void loadOrInitializeSheet() {
-    //ask for term and sheet, then load or create new
+    cout << "\n-------------------------------------------";
+    cout << "\nLoad or Create Sheet";
+    cout << "\n-------------------------------------------";
+
+    //show available sheets
+    string dbFile = getDatabaseFileName();
+    ifstream inputFile(dbFile);
+
+    if (inputFile.is_open()) {
+        cout << "Available Sheets in " << termName << ":\n";
+
+        string line;
+        while(getline(inputFile, line)) {
+            cout << " - " << line << "\n";
+        }
+        inputFile.close();   
+    }
+
+    cout << "\nEnter sheet name to open (e.g. Week1): ";
+    getline(cin, sheetName);
+
+    string filename = getSheetFileName(); 
+    ifstream BANANA(filename); 
+
+    //
 }
 
 
