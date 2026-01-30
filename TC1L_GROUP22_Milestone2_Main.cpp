@@ -239,7 +239,8 @@ void deleteRow() {
 }
 
 void countRows() {
-    //print 
+    cout << "\nCount Rows\n-----------------------";
+    cout << "\nNumber of rows: " << currentRowCount << "\n";
 }
 
 void saveFile() {
@@ -250,16 +251,22 @@ void loadFile() {
     //read "attendance.txt" back into 'sheet[]'
 }
 
+void loadOrInitializeSheet() {
+    //ask for term and sheet, then load or create new
+}
+
 
 //MAIN 
 int main() {
 
     int choice;
 
-    //loadFile();
+    //createTerm(); 
+
+    //loadOrInitializeSheet();
 
     
-        initializeSheet();
+    initializeSheet();
 
     //Main menu
     do {
