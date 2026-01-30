@@ -305,43 +305,39 @@ void updateRow() {
 
 void deleteRow() {
     if (currentRowCount == 0) {
-        cout << "Error: Sheet is empty. Nothing to delete." <<endl;
+        cout << "Error: Sheet is empty. Nothing to delete." << endl;
         return;
     }
 
-    int targetID;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string searchTerm;
 
     cout << "-------------------------------------------" << endl;
     cout << "Delete Attendance Row" << endl;
     cout << "-------------------------------------------" << endl;
     cout << "Enter StudentID to delete: ";
-
-    // Input validation 
-    while (!(cin >> targetID)) {
-        cout << "Error: Invalid integer. Try again. ";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
+    getline(cin, searchTerm);
 
     int foundIndex = -1;
 
-    // Find row with matching StudentID 
+    // Search based on FIRST COLUMN (StudentID)
     for (int i = 0; i < currentRowCount; i++) {
-        if (stoi(sheet[i].cells[0]) == targetID) {
+        if (sheet[i].cells[0] == searchTerm) {
             foundIndex = i;
             break;
         }
     }
 
-    // If did not find the ID
+    // If StudentID not found
     if (foundIndex == -1) {
         cout << "Error: StudentID does not exist." << endl;
         return;
     }
 
-    // Delete whole row then shifting array upward
+    // Delete whole row by shifting array upward
     for (int i = foundIndex; i < currentRowCount - 1; i++) {
-        sheet[i] = sheet[i + 1];   
+        sheet[i] = sheet[i + 1];
     }
 
     currentRowCount--;
