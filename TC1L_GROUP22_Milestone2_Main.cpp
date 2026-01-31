@@ -21,6 +21,8 @@
 #include <string>
 #include <limits>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -28,6 +30,7 @@ using namespace std;
 //Constants
 const int MAX_ROWS = 100; //Max students
 const int MAX_COLS = 10;  //Max columns
+const string MASTER_TERM = "Allterms.csv";
 
 struct AttendanceRow {
     string cells[MAX_COLS]; //Stores cell values for each column in a row
@@ -53,8 +56,11 @@ void initializeSheet() {
     cout << "\n===========================================\n";
     cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 1\n";
     cout << "===========================================\n";
-    cout << "Enter attendance sheet name: ";
+    //cout << "Enter attendance sheet name: ";
 
+    //getline(cin, sheetName);
+    
+    //cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
     getline(cin, sheetName);
 
     cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
@@ -228,8 +234,9 @@ void viewSheet() {
 
 //Milestone 2 Functions
 
-//generate sheet filename
+//generate attancande sheet 
 string getSheetFileName() {
+    return sheetName + ".csv"; // return the sheet name with .csv
     if (sheetName.empty()) {
         return "default.csv";
     }
@@ -238,17 +245,53 @@ string getSheetFileName() {
     }
 }
 
-//generate database filename
+//generate term database 
 string getDatabaseFileName() {
+    return termName + ".csv"; // return term name with .csv
+    
+}
+
+void displayTerms() {
+    ifstream InputFile(MASTER_TERM);
+
+    // 1. If file doesn't exist, try to create it
+    if (!InputFile.is_open()) {
+        ofstream CreateFile(MASTER_TERM);
+        if (CreateFile.is_open()) {
+            cout << "[System: Main Index created for the first time]\n";
+            CreateFile.close();
+        } else {
+            cout << "[Error: Could not create system file. Check folder permissions]\n";
+        }
+        cout << "No terms have been created yet.\n";
+        return; // Exits the function early
+    }
+
+    // 2. If file exists, check if it is empty
+    if (InputFile.peek() == ifstream::traits_type::eof()) {
+        cout << "No terms have been created yet.\n";
+    } 
+    // 3. If file has data, display it
+    else {        
+        string line;
+        while (getline(InputFile, line)) {
+            if (!line.empty()) {
+                cout << " - " << line << endl;
+            }
+        }
     if (termName.empty()) {
         return "DefaultTerm.csv";
     }
     else {
         return termName + ".csv";
     }
+    
+    InputFile.close();
 }
 
-void databaseIndex(){
+
+
+void databaseIndex(){ // *********************************************************************
     string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
 
@@ -282,20 +325,44 @@ void databaseIndex(){
     }
 }
 
-void createTerm() {
-    cout << "\n===========================================\n";
-    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2\n";
-    cout << "===========================================\n";
-    cout << "Create School Term (Database)";
-    cout << "\n-------------------------------------------";
-    cout << "\nEnter term name: ";
+string strip(const string& s) {
+    size_t first = s.find_first_not_of(" \t\r\n");
+    if (string::npos == first) return ""; // String is all whitespace
+    size_t last = s.find_last_not_of(" \t\r\n");
+    return s.substr(first, (last - first + 1));
+}
+
+void vieworcreateTerm() {
+    cout << "\n==========================================="<< endl;
+    cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2"<< endl;
+    cout << "==========================================="<< endl;
+    cout << "Create School Term (Database)" << endl;
+    cout << "\n-------------------------------------------" << endl;
+    cout << "All existing terms: " << endl;
+    displayTerms();
+    cout << "\nEnter term name: " ;
     getline(cin, termName);
+    termName = strip(termName);
+    bool exists = false;
+    ifstream DURIAN(MASTER_TERM);
+    string line;
+    while(getline(DURIAN, line)) {
+        if(line == termName) exists = true;
+    }
+    DURIAN.close();
+
+    if(!exists) {
+        ofstream BANANA(MASTER_TERM, ios::app);
+        BANANA << termName << endl;
+        BANANA.close();
+    }
 
     //check or create
     ofstream outputFile(getDatabaseFileName(), ios::app);
     outputFile.close();
-
-     cout << "Database \"" << termName << "\" created/loaded (Index: " << getDatabaseFileName() << ").\n";
+    cout << "Database " << termName <<" created and loaded"<< endl;
+    // getfilename here 
+    cout << "Reading attendance data from file..."<< endl;
 
 }
 
@@ -425,35 +492,132 @@ void countRows() {
 }
 
 void saveFile() {
-    //write 'sheet[]' to "attendance.txt"
+    // Get the specific filename for the current sheet
+    string filename = getSheetFileName();
+    
+    // Open the file for writing (ios::out is default for ofstream)
+    // Note: We don't use ios::app here because we want to overwrite 
+    // the file with the most recent version of the data.
+    ofstream outputFile(filename);
+
+    if (!outputFile.is_open()) {
+        cout << "Error: Could not save data to " << filename << endl;
+        return;
+    }
+
+    // --- Part A: Save Headers ---
+    for (int i = 0; i < currentColCount; i++) {
+        outputFile << columns[i].name << " (" << columns[i].type << ")";
+        
+        // Add a comma if it's NOT the last column
+        if (i < currentColCount - 1) {
+            outputFile << ",";
+        }
+    }
+    outputFile << "\n"; // New line after headers
+
+    // --- Part B: Save Rows ---
+    for (int i = 0; i < currentRowCount; i++) {
+        for (int j = 0; j < currentColCount; j++) {
+            outputFile << sheet[i].cells[j];
+            
+            // Add a comma if it's NOT the last cell
+            if (j < currentColCount - 1) {
+                outputFile << ",";
+            }
+        }
+        outputFile << "\n"; // New line after each student row
+    }
+
+    outputFile.close();
+    cout << "Successfully saved to " << filename << ".\n";
 }
 
 void loadFile() {
-    //read "attendance.txt" back into 'sheet[]'
+    string filename = getSheetFileName();
+    ifstream inputFile(filename);
+
+    if (!inputFile.is_open()) {
+        cout << "Notice: No existing data found for " << filename << ". Starting fresh.\n";
+        return;
+    }
+
+    // Reset counts before loading new data
+    currentRowCount = 0;
+    currentColCount = 0;
+
+    string line;
+    
+    // --- Part A: Load the Header (First Line) ---
+    if (getline(inputFile, line)) {
+        stringstream ss(line);
+        string colData;
+        int colIdx = 0;
+
+        while (getline(ss, colData, ',')) {
+            // Logic to separate "Name" and "(TYPE)" 
+            size_t openBracket = colData.find('(');
+            size_t closeBracket = colData.find(')');
+
+            if (openBracket != string::npos && closeBracket != string::npos) {
+                columns[colIdx].name = colData.substr(0, openBracket);
+                // Clean up trailing space in name
+                if (columns[colIdx].name.back() == ' ') columns[colIdx].name.pop_back();
+                
+                columns[colIdx].type = colData.substr(openBracket + 1, closeBracket - openBracket - 1);
+            }
+            colIdx++;
+        }
+        currentColCount = colIdx;
+    }
+
+    // --- Part B: Load the Student Rows ---
+    while (getline(inputFile, line) && currentRowCount < MAX_ROWS) {
+        stringstream ss(line);
+        string cellData;
+        int colIdx = 0;
+
+        while (getline(ss, cellData, ',') && colIdx < currentColCount) {
+            sheet[currentRowCount].cells[colIdx] = cellData;
+            colIdx++;
+        }
+        currentRowCount++;
+    }
+
+    inputFile.close();
+    cout << "Successfully loaded " << currentRowCount << " rows from " << filename << ".\n";
 }
 
-void loadOrInitializeSheet() {
+void loadOrCreateSheet() {
     cout << "\n-------------------------------------------";
     cout << "\nLoad or Create Sheet";
-    cout << "\n-------------------------------------------";
+    cout << "\n-------------------------------------------" << endl;
 
-    //show available sheets
     string dbFile = getDatabaseFileName();
     ifstream inputFile(dbFile);
 
     if (inputFile.is_open()) {
         cout << "Available Sheets in " << termName << ":\n";
-
         string line;
+        bool hasContent = false;
         while(getline(inputFile, line)) {
             cout << " - " << line << "\n";
+            hasContent = true;
         }
+        if (!hasContent) cout << " [No sheets in this term yet]\n";
+        inputFile.close();   
         inputFile.close();
     }
 
-    cout << "\nEnter sheet name to open (e.g. Week1): ";
+    cout << "\nEnter sheet name to open (e.g. Week1) or create a new one: ";
     getline(cin, sheetName);
+    loadFile();
 
+    // Call your index function to record this sheet into the Term CSV
+    databaseIndex(); 
+}
+
+//MAIN 
     string filename = getSheetFileName();
     ifstream BANANA(filename);
 
@@ -466,9 +630,10 @@ int main() {
 
     int choice;
 
+    vieworcreateTerm(); 
     //createTerm();
 
-    //loadOrInitializeSheet();
+    loadOrCreateSheet();
 
 
     initializeSheet();
