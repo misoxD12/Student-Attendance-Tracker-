@@ -391,7 +391,7 @@ void Updatesys(){
         cout<< "Error: No rows can be updated!!.\n";
         return;
     }
-    //choose the row wanted to be changed
+    //choose the row wanted to be updated
     int rowIndex;
     cout << "Enter the row wanted to be updated(1- " << currentRowCount << "): ";
     while(!(cin >> rowIndex) || rowIndex < 1 || rowIndex> currentRowCount){
@@ -427,7 +427,7 @@ void Updatesys(){
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        // 4. Update selected column (INPUT VALIDATION)
+        //Update selected column (INPUT VALIDATION)
         cout << "Enter new value for " << columns[colIndex].name
              << " (current: " << sheet[rowIndex].cells[colIndex] << "): ";
 
