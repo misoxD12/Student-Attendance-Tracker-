@@ -353,11 +353,123 @@ void vieworcreateTerm() {
 }
 
 void updateRow() {
-    //ask for ID, find it, and change it
+    if (currentRowCount == 0) {
+        cout << "Error: No rows available to update.\n";
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
+
+    string searchTerm;
+    cout << "Enter " << columns[0].name << " to update: ";
+    getline(cin, searchTerm);
+
+    // Search for the row
+    int rowIndex = -1;
+    bool isFound = false;
+
+    for (int i = 0; i < currentRowCount; i++) {
+        // Check if the first column matches
+        if (sheet[i].cells[0] == searchTerm) {
+            rowIndex = i;
+            isFound = true;
+            break;
+        }
+    }
+
+    if (!isFound) {
+        cout << "Error: " << searchTerm << " does not exist." << endl;
+        return;
+    }
+
+    cout << "Student found in row " << (rowIndex + 1) << ".\n";
+
+    char continueChoice;
+// loop for the updaterow
+    do {
+        cout << "\nWhich column do you want to update?\n";
+        for (int i = 0; i < currentColCount; i++) {
+            cout << (i + 1) << ". " << columns[i].name << endl;
+        }
+
+        int colChoice;
+        cout << "Enter column number: ";
+        while (!(cin >> colChoice) || colChoice < 1 || colChoice > currentColCount) {
+            cout << "Invalid column number. Try again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        int colIndex = colChoice - 1;
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');  // clear buffer
+
+        cout << "Enter new value for " << columns[colIndex].name
+             << " (current: " << sheet[rowIndex].cells[colIndex] << "): ";
+
+        if (columns[colIndex].type == "INT") {
+            int tempVal;
+            while (!(cin >> tempVal)) {
+                cout << "Error: " << columns[colIndex].name << " must be a number (INT). Try again: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            sheet[rowIndex].cells[colIndex] = to_string(tempVal);
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            getline(cin, sheet[rowIndex].cells[colIndex]);
+        }
+
+        cout << "Field updated successfully.\n";
+
+        cout << "Do you want to update another field for this student? (Y/N): ";
+        cin >> continueChoice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    } while (continueChoice == 'Y' || continueChoice == 'y');
+
+    cout << "Finished updating student record.\n";
 }
 
 void deleteRow() {
-    //ind ID, remove it, and shift array up
+    if (currentRowCount == 0) {
+        cout << "Error: Sheet is empty. Nothing to delete." << endl;
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string searchTerm;
+
+    cout << "-------------------------------------------" << endl;
+    cout << "Delete Attendance Row" << endl;
+    cout << "-------------------------------------------" << endl;
+    cout << "Enter StudentID to delete: ";
+    getline(cin, searchTerm);
+
+    int foundIndex = -1;
+
+    // Search based on FIRST COLUMN (StudentID)
+    for (int i = 0; i < currentRowCount; i++) {
+        if (sheet[i].cells[0] == searchTerm) {
+            foundIndex = i;
+            break;
+        }
+    }
+
+    // If StudentID not found
+    if (foundIndex == -1) {
+        cout << "Error: StudentID does not exist." << endl;
+        return;
+    }
+
+    // Delete whole row by shifting array upward
+    for (int i = foundIndex; i < currentRowCount - 1; i++) {
+        sheet[i] = sheet[i + 1];
+    }
+
+    currentRowCount--;
+
+    cout << "Row deleted successfully." << endl;
 }
 
 void countRows() {
