@@ -330,17 +330,17 @@ void vieworcreateTerm() {
     getline(cin, termName);
     termName = strip(termName);
     bool exists = false;
-    ifstream checkMaster(MASTER_TERM);
+    ifstream DURIAN(MASTER_TERM);
     string line;
-    while(getline(checkMaster, line)) {
+    while(getline(DURIAN, line)) {
         if(line == termName) exists = true;
     }
-    checkMaster.close();
+    DURIAN.close();
 
     if(!exists) {
-        ofstream updateMaster(MASTER_TERM, ios::app);
-        updateMaster << termName << endl;
-        updateMaster.close();
+        ofstream BANANA(MASTER_TERM, ios::app);
+        BANANA << termName << endl;
+        BANANA.close();
     }
 
     //check or create
