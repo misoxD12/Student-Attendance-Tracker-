@@ -283,43 +283,6 @@ void allTerms() {
     }
 }
 
-
-    /*
-    ifstream InputFile(MASTER_TERM);
-
-    // 1. If file doesn't exist, try to create it
-    if (!InputFile.is_open()) {
-        ofstream CreateFile(MASTER_TERM);
-        if (CreateFile.is_open()) {
-            cout << "[System: Main Index created for the first time]\n";
-            CreateFile.close();
-        } else {
-            cout << "[Error: Could not create system file. Check folder permissions]\n";
-        }
-        cout << "No terms have been created yet.\n";
-        return; // Exits the function early
-    }
-
-    // 2. If file exists, check if it is empty
-    if (InputFile.peek() == ifstream::traits_type::eof()) {
-        cout << "No terms have been created yet.\n";
-    } 
-    // 3. If file has data, display it
-    else {        
-        string line;
-        while (getline(InputFile, line)) {
-            if (!line.empty()) {
-                cout << " - " << line << endl;
-            }
-        }
-    
-    }
-    
-    InputFile.close();
-}
-*/
-
-
 void databaseIndex(){ 
     string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
@@ -354,19 +317,10 @@ void databaseIndex(){
     }
 }
 
-/*
-string strip(const string& s) {
-    size_t first = s.find_first_not_of(" \t\r\n");
-    if (string::npos == first) return ""; // String is all whitespace
-    size_t last = s.find_last_not_of(" \t\r\n");
-    return s.substr(first, (last - first + 1));
-}
-    */
-
 void createTerm() {
-    cout << "\n===========================================\n";
+    cout << "\n==============================================\n";
     cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2\n";
-    cout << "===========================================\n";
+    cout << "==============================================\n";
     cout << "Create School Term (Database)";
 
      cout << "\nExisting Terms:\n";
@@ -462,15 +416,15 @@ void updateRow() {
             getline(cin, sheet[rowIndex].cells[colIndex]);
         }
 
-        cout << "Field updated successfully.\n";
+        cout << "Row updated successfully.\n";
 
-        cout << "Do you want to update another field for this student? (Y/N): ";
+        cout << "Do you want to update another data for this row? (Y/N): ";
         cin >> continueChoice;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     } while (continueChoice == 'Y' || continueChoice == 'y');
 
-    cout << "Finished updating student record.\n";
+    cout << "Data is updated.\n";
 }
 
 void deleteRow() {
@@ -486,7 +440,7 @@ void deleteRow() {
     cout << "-------------------------------------------" << endl;
     cout << "Delete Attendance Row" << endl;
     cout << "-------------------------------------------" << endl;
-    cout << "Enter StudentID to delete: ";
+    cout << "Enter " << columns[0].name  << " to delete: ";
     getline(cin, searchTerm);
 
     int foundIndex = -1;
@@ -684,6 +638,7 @@ int main() {
     do {
         cout << "\n-------------------------------------------";
         cout << "\nMAIN MENU";
+        cout << "\nCurrent Term: " << termName;
         cout << "\nCurrent Sheet: " << sheetName;
         cout << "\n-------------------------------------------";
         cout << "\n1. Define Columns";
