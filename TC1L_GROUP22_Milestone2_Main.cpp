@@ -237,23 +237,33 @@ void viewSheet() {
 //generate attancande sheet 
 string getSheetFileName() {
     if (sheetName.empty()) {
-        return "default.csv";
+        return ""; 
     } 
-    else {
-        return sheetName + ".csv"; // return the sheet name with .csv
+
+    //if somehow term is missing, just use sheetname
+    else if (termName.empty()) {
+        return sheetName + ".csv";
     }
+
+    //combine them: 2530_Week1.csv
+    else{
+        return termName + "_" + sheetName + ".csv"; 
+    }
+    
 }
 
 //generate term database 
 string getDatabaseFileName() {
     if (termName.empty()) {
-        return "DefaultTerm.csv";
-    } 
-    else {
-        return termName + ".csv"; // return term name with .csv
+        return "";
     }
-    
+
+    else{
+        return termName + ".csv";
+    }
+     
 }
+    
 
 void allTerms() {
 
@@ -284,8 +294,9 @@ void allTerms() {
 }
 
 void databaseIndex(){ 
-    string sheetfile = getSheetFileName();
+    //string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
+    string entryname = sheetName;
 
     ifstream inputFile(dbfile);
     //store each line
@@ -294,22 +305,23 @@ void databaseIndex(){
 
     if(inputFile.is_open()){
         while (getline(inputFile, line)){
-            if(line == sheetfile){
+            if(line == entryname){
                 Existsornot = true;
                 break;
             }
         }
+        inputFile.close();
 
     }
-    inputFile.close();
+    
 
     if(!Existsornot){
         ofstream outputFile(dbfile, ios::app);
 
         if(outputFile.is_open()){
-            outputFile << sheetfile << endl;
+            outputFile << entryname << endl;
             outputFile.close();
-            cout << "Database Added " << sheetfile << " to database index " << dbfile << ".\n";
+            cout << "Database Added " << entryname << " to database index " << dbfile << ".\n";
         }
         else{
             cout << "Error. Unable to update file.\n";
@@ -337,7 +349,13 @@ void createTerm() {
 
     cout << "\n-------------------------------------------";
     cout << "\nEnter term name (e.g. 2530): ";
-    getline(cin, termName);
+
+    do {
+        getline(cin, termName);
+        if (termName.empty()) {
+             cout << "Error: Term name cannot be empty. Try again: ";
+        }
+    } while (termName.empty());
 
     allTerms();
 
@@ -601,7 +619,13 @@ void loadOrCreateSheet() {
     }
 
     cout << "\nEnter sheet name to open (e.g. Week1) or create a new one: ";
-    getline(cin, sheetName);
+
+    do {
+        getline(cin, sheetName);
+        if (sheetName.empty()) {
+            cout << "Error: Name cannot be empty. Please enter a name: ";
+        }
+    } while (sheetName.empty());
 
     //check if file exists before trying to load
     string filename = getSheetFileName();
