@@ -2,7 +2,7 @@
 // Program: TC1L_GROUP22_Milestone2_Main.cpp
 // Course: CCP6114 Programming Fundamentals
 // Lecture Class: TC1L
-// Tutorial Class: TT3L 
+// Tutorial Class: TT3L
 // Trimester: 2530
 // Member_1: 252UC242SE | CHAI MING SONG | CHAI.MING.SONG1@student.mmu.edu.my | 016-9320289
 // Member_2: 252UC242ZC | LEONG KA KIT | LEONG.KA.KIT1@student.mmu.edu.my | 011-58606375
@@ -10,10 +10,10 @@
 // Member_4: 252UC241NW | HARSIMRANJEET SINGH SRAU A/L GURDEV SINGH |  HARSIMRANJEET.SINGH.SRAU1@student.mmu.edu.my | 011-11928326
 // *********************************************************
 // Task Distribution (Milestone 2 - Technical Breakdown)
-// Member_1: 
-// Member_2: 
-// Member_3: 
-// Member_4: 
+// Member_1:
+// Member_2:
+// Member_3:
+// Member_4:
 // *********************************************************
 
 
@@ -25,7 +25,7 @@
 using namespace std;
 
 
-//Constants 
+//Constants
 const int MAX_ROWS = 100; //Max students
 const int MAX_COLS = 10;  //Max columns
 
@@ -34,14 +34,14 @@ struct AttendanceRow {
 };
 
 struct Column {
-    string name; 
-    string type; 
+    string name;
+    string type;
 };
 
 AttendanceRow sheet[MAX_ROWS];
-Column columns[MAX_COLS];     
-int currentRowCount = 0;     
-int currentColCount = 0;      
+Column columns[MAX_COLS];
+int currentRowCount = 0;
+int currentColCount = 0;
 
 string sheetName = "";
 
@@ -56,18 +56,18 @@ void initializeSheet() {
     cout << "Enter attendance sheet name: ";
 
     getline(cin, sheetName);
-    
+
     cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
 }
 
-void defineColumns() { 
+void defineColumns() {
 
     cout << "\n-------------------------------------------";
     cout << "\nDefine Columns";
     cout << "\n-------------------------------------------";
-    // Ask for column count 
+    // Ask for column count
     cout << "\nDefine number of columns (max 10): ";
-    
+
     while (!(cin >> currentColCount) || currentColCount < 1 || currentColCount > MAX_COLS) {
         cout << "Error: Please enter a number between 1 and " << MAX_COLS << ": ";
         cin.clear(); // Clear error flags
@@ -78,37 +78,37 @@ void defineColumns() {
         cout << "Warning: Redefining columns will clear existing data.\n";
         currentRowCount = 0; // Reset row count
         cout << "Current rows cleared.\n";
-    } 
-    
-    // Clear buffer to remove the leftover 'Enter' key entered in by the user 
+    }
+
+    // Clear buffer to remove the leftover 'Enter' key entered in by the user
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    
+
     // Loop to make each column
-    for (int i = 0; i < currentColCount; i++) 
+    for (int i = 0; i < currentColCount; i++)
     {
-        // Since from the input we are required to Determine the 
-        // column name and data type we have to split the inputs 
+        // Since from the input we are required to Determine the
+        // column name and data type we have to split the inputs
         bool validFormat = false; // Assume the input is false until we check it
-        
+
         while (!validFormat) // IF true
         {
             string RawInput; // THe var for StudentID (INT)
             cout << "Enter column " << (i + 1) << " name (Format: Name (TYPE)) : "; // User types: StudentID (INT)
-                        
+
             getline(cin, RawInput);
 
             // *** FIX: Added this to handle accidental Empty Enters safely ***
-            if (RawInput.empty()) continue; 
+            if (RawInput.empty()) continue;
 
             // Locate datatpye from input
-            // Find the "(" and the ")" 
+            // Find the "(" and the ")"
             // size_t = unsigned integer for position
-            size_t openBracket = RawInput.find('(');        
+            size_t openBracket = RawInput.find('(');
             size_t closeBracket = RawInput.find(')');
-        
-            // Check if "()" exist and is in the right order 
-            if (openBracket != string::npos && closeBracket != string::npos && closeBracket > openBracket) 
-            // string::npos = No position or not found 
+
+            // Check if "()" exist and is in the right order
+            if (openBracket != string::npos && closeBracket != string::npos && closeBracket > openBracket)
+            // string::npos = No position or not found
             {
                 string extractedName = RawInput.substr(0, openBracket);
                 // from the string, take from index 0 to openBracket for NAME
@@ -116,8 +116,8 @@ void defineColumns() {
                 {
                     extractedName.pop_back();
                 }
-            
-                // Extract Type; the following is just as an exmaple for reference 
+
+                // Extract Type; the following is just as an exmaple for reference
                 // Start after '(', Length = (9 - 5 - 1) = 3
                 string extractedType = RawInput.substr(openBracket + 1, closeBracket - openBracket - 1);
 
@@ -126,22 +126,22 @@ void defineColumns() {
                 while (!extractedType.empty() && extractedType.back() == ' ') extractedType.pop_back();
 
                 // Validate datatype by user
-                if (extractedType == "INT" || extractedType == "TEXT") 
+                if (extractedType == "INT" || extractedType == "TEXT")
                 {
                     columns[i].name = extractedName;
                     columns[i].type = extractedType;
                     validFormat = true; // Breaks the loop
-                } 
-                else 
+                }
+                else
                 {
                     cout << "Error: Type must be exactly INT or TEXT inside brackets. Found: \"" << extractedType << "\"\n";
                 }
-            } 
+            }
             else
             {
                 cout << "Error: Invalid format. Please use format: Name (TYPE). E.g., StudentID (INT)\n";
             }
-        } 
+        }
     }
     cout << "\nSheet structure created successfully.\n";
 }
@@ -162,9 +162,9 @@ void insertRow() {
 
         // DYNAMIC LOOP: Run once for every column the user defined
         for (int i = 0; i < currentColCount; i++) {
-            
+
             cout << "Enter " << columns[i].name << ": ";
-            
+
             if (columns[i].type == "INT") {
                 // LOGIC FOR INTEGERS (ID)
                 int tempVal;
@@ -173,12 +173,12 @@ void insertRow() {
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 }
-                
+
                 sheet[currentRowCount].cells[i] = to_string(tempVal);
-                
+
                 // We DO need cin.ignore AFTER this to clean up for the next loop
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-            } 
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
             else {
                 // LOGIC FOR TEXT (Name)
                 getline(cin, sheet[currentRowCount].cells[i]);
@@ -232,7 +232,7 @@ void viewSheet() {
 string getSheetFileName() {
     if (sheetName.empty()) {
         return "default.csv";
-    } 
+    }
     else {
         return sheetName + ".csv";
     }
@@ -242,7 +242,7 @@ string getSheetFileName() {
 string getDatabaseFileName() {
     if (termName.empty()) {
         return "DefaultTerm.csv";
-    } 
+    }
     else {
         return termName + ".csv";
     }
@@ -255,7 +255,7 @@ void databaseIndex(){
     ifstream inputFile(dbfile);
     //store each line
     string line;
-    bool Existsornot = false; 
+    bool Existsornot = false;
 
     if(inputFile.is_open()){
         while (getline(inputFile, line)){
@@ -292,7 +292,7 @@ void createTerm() {
     getline(cin, termName);
 
     //check or create
-    ofstream outputFile(getDatabaseFileName(), ios::app); 
+    ofstream outputFile(getDatabaseFileName(), ios::app);
     outputFile.close();
 
      cout << "Database \"" << termName << "\" created/loaded (Index: " << getDatabaseFileName() << ").\n";
@@ -300,7 +300,81 @@ void createTerm() {
 }
 
 void updateRow() {
-    //ask for ID, find it, and change it
+    if (currentRowCount == 0) {
+        cout << "Error: No rows available to update.\n";
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
+
+    string searchTerm;
+    cout << "Enter " << columns[0].name << " to update: ";
+    getline(cin, searchTerm);
+
+    // Search for the row
+    int rowIndex = -1;
+    bool isFound = false;
+
+    for (int i = 0; i < currentRowCount; i++) {
+        // Check if the first column matches
+        if (sheet[i].cells[0] == searchTerm) {
+            rowIndex = i;
+            isFound = true;
+            break;
+        }
+    }
+
+    if (!isFound) {
+        cout << "Error: " << searchTerm << " does not exist." << endl;
+        return;
+    }
+
+    cout << "Student found in row " << (rowIndex + 1) << ".\n";
+
+    char continueChoice;
+// loop for the updaterow
+    do {
+        cout << "\nWhich column do you want to update?\n";
+        for (int i = 0; i < currentColCount; i++) {
+            cout << (i + 1) << ". " << columns[i].name << endl;
+        }
+
+        int colChoice;
+        cout << "Enter column number: ";
+        while (!(cin >> colChoice) || colChoice < 1 || colChoice > currentColCount) {
+            cout << "Invalid column number. Try again: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        int colIndex = colChoice - 1;
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');  // clear buffer
+
+        cout << "Enter new value for " << columns[colIndex].name
+             << " (current: " << sheet[rowIndex].cells[colIndex] << "): ";
+
+        if (columns[colIndex].type == "INT") {
+            int tempVal;
+            while (!(cin >> tempVal)) {
+                cout << "Error: " << columns[colIndex].name << " must be a number (INT). Try again: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            sheet[rowIndex].cells[colIndex] = to_string(tempVal);
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            getline(cin, sheet[rowIndex].cells[colIndex]);
+        }
+
+        cout << "Field updated successfully.\n";
+
+        cout << "Do you want to update another field for this student? (Y/N): ";
+        cin >> continueChoice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    } while (continueChoice == 'Y' || continueChoice == 'y');
+
+    cout << "Finished updating student record.\n";
 }
 
 void deleteRow() {
@@ -374,29 +448,29 @@ void loadOrInitializeSheet() {
         while(getline(inputFile, line)) {
             cout << " - " << line << "\n";
         }
-        inputFile.close();   
+        inputFile.close();
     }
 
     cout << "\nEnter sheet name to open (e.g. Week1): ";
     getline(cin, sheetName);
 
-    string filename = getSheetFileName(); 
-    ifstream BANANA(filename); 
+    string filename = getSheetFileName();
+    ifstream BANANA(filename);
 
     //
 }
 
 
-//MAIN 
+//MAIN
 int main() {
 
     int choice;
 
-    //createTerm(); 
+    //createTerm();
 
     //loadOrInitializeSheet();
 
-    
+
     initializeSheet();
 
     //Main menu
@@ -408,17 +482,17 @@ int main() {
         cout << "\n1. Define Columns";
         cout << "\n2. Insert New Attendance Row";
         cout << "\n3. View Attendance Sheet";
-        cout << "\n4. Update Row";        
+        cout << "\n4. Update Row";
         cout << "\n5. Delete Row";
-        cout << "\n6. Count Row";     
-        cout << "\n7. Save & Exit";       
+        cout << "\n6. Count Row";
+        cout << "\n7. Save & Exit";
         cout << "\n\nEnter choice: ";
         cin >> choice;
 
         //Validation
         while(cin.fail()) {
-            cin.clear(); 
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Invalid input. Please enter a number (1-7): ";
             cin >> choice;
         }
@@ -429,27 +503,27 @@ int main() {
                 break;
 
             case 2:
-                insertRow(); 
+                insertRow();
                 break;
 
             case 3:
-                viewSheet();  
+                viewSheet();
                 break;
 
             case 4:
-                updateRow();  
+                updateRow();
                 break;
 
             case 5:
-                deleteRow();  
+                deleteRow();
                 break;
 
             case 6:
                 countRows();
                 break;
-            
+
             case 7:
-                saveFile();  
+                saveFile();
                 cout << "\nData saved. Exiting program...\n";
                 break;
 
@@ -459,6 +533,6 @@ int main() {
 
     } while (choice != 7);
 
-    
+
     return 0;
-}   
+}
