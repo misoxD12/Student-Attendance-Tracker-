@@ -296,7 +296,7 @@ void allTerms() {
 void databaseIndex(){ 
     //string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
-    string entryname = sheetName;
+    string sheetentryname = sheetName;
 
     ifstream inputFile(dbfile);
     //store each line
@@ -305,7 +305,7 @@ void databaseIndex(){
 
     if(inputFile.is_open()){
         while (getline(inputFile, line)){
-            if(line == entryname){
+            if(line == sheetentryname){
                 Existsornot = true;
                 break;
             }
@@ -319,9 +319,9 @@ void databaseIndex(){
         ofstream outputFile(dbfile, ios::app);
 
         if(outputFile.is_open()){
-            outputFile << entryname << endl;
+            outputFile << sheetentryname << endl;
             outputFile.close();
-            cout << "Database Added " << entryname << " to database index " << dbfile << ".\n";
+            cout << "Database Added " << sheetentryname << " to database index " << dbfile << ".\n";
         }
         else{
             cout << "Error. Unable to update file.\n";
@@ -352,8 +352,9 @@ void createTerm() {
 
     do {
         getline(cin, termName);
-        if (termName.empty()) {
-             cout << "Error: Term name cannot be empty. Try again: ";
+        if (termName.empty() || termName.find_first_not_of(' ') == string::npos) {
+            cout << "Error: Term name cannot be empty. Try again: ";
+            termName= "";
         }
     } while (termName.empty());
 
@@ -622,8 +623,9 @@ void loadOrCreateSheet() {
 
     do {
         getline(cin, sheetName);
-        if (sheetName.empty()) {
+        if (sheetName.empty() || sheetName.find_first_not_of(' ') == string::npos) {
             cout << "Error: Name cannot be empty. Please enter a name: ";
+            sheetName= "";
         }
     } while (sheetName.empty());
 
