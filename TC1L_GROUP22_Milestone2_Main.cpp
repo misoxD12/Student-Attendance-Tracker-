@@ -360,7 +360,24 @@ void updateRow() {
             sheet[foundIndex].cells[colIndex] = to_string(tempVal);
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         } else {
-            getline(cin, sheet[foundIndex].cells[colIndex]);
+            string input;
+            do {
+                getline(cin, input);
+                bool isNumber = true;
+                for (char c : input) {
+                    if (!isdigit(c)) {
+                        isNumber = false;
+                        break;
+                    }
+                }
+                if (isNumber && !input.empty()) {
+                    cout << "Error: This field cannot be a pure number. Try again: ";
+                } else {
+                    break;
+                }
+            } while (true);
+
+            sheet[foundIndex].cells[colIndex] = input;
         }
 
         cout << "Field updated successfully.\n";
@@ -372,7 +389,6 @@ void updateRow() {
     } while (continueChoice == 'Y' || continueChoice == 'y');
 
     cout << "Finished updating student record.\n";
-
 }
 void deleteRow() {
     if (currentRowCount == 0) {
