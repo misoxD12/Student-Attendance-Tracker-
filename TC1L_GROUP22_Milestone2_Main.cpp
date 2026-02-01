@@ -242,12 +242,12 @@ string getSheetFileName() {
 
     //if somehow term is missing, just use sheetname
     else if (termName.empty()) {
-        return sheetName + ".csv"; // return the sheet name with .csv
+        return sheetName + ".csv"; //return the sheet name with .csv
     }
 
     //combine them: 2530_Week1.csv
     else{
-        return termName + "_" + sheetName + ".csv"; // return the sheet name with .csv
+        return termName + "_" + sheetName + ".csv"; //return the sheet name with .csv
     }
     
 }
@@ -259,7 +259,7 @@ string getDatabaseFileName() {
     }
 
     else{
-        return termName + ".csv"; // return term name with .csv
+        return termName + ".csv"; //return term name with .csv
     }
      
 }
@@ -305,7 +305,7 @@ void databaseIndex(){
     ifstream inputFile(dbfile);
     //store each line
     string line;
-    bool Existsornot = false; // to see if alr in listed or not 
+    bool Existsornot = false; //flag to see if alr in listed or not 
 
     if(inputFile.is_open()){
         while (getline(inputFile, line)){
@@ -363,6 +363,7 @@ void createTerm() {
         if (termName.empty() || termName.find_first_not_of(' ') == string::npos) {
             cout << "Error: Term name cannot be empty. Try again: ";
             termName= "";
+            //reset to make sure it loops
         }
     } while (termName.empty());
 
@@ -622,11 +623,12 @@ void loadOrCreateSheet() {
     if (databaseInput.is_open()) {
         cout << "Available Sheets in " << termName << ":\n";
         string line;
+        //read each line and display
         while(getline(databaseInput, line)) {
             if (!line.empty())
             {
                 cout << " - " << line << "\n";
-                sheetExists = true; // if file got content chanfe to true 
+                sheetExists = true; // if file got content change to true 
             }
         }
         databaseInput.close();   
