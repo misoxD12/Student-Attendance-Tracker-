@@ -447,11 +447,12 @@ void updateRow() {
 }
 
 void deleteRow() {
+    // Check if sheet is empty
     if (currentRowCount == 0) {
         cout << "Error: Sheet is empty. Nothing to delete." << endl;
         return;
     }
-
+    // Clear input buffer before getline
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     string searchTerm;
@@ -472,20 +473,20 @@ void deleteRow() {
         }
     }
 
-    // If StudentID not found
+    // If StudentID not found, show error and exit
     if (foundIndex == -1) {
         cout << "Error: StudentID does not exist." << endl;
         return;
     }
 
-    // Delete whole row by shifting array upward
+    // Shift rows up to delete whole row
     for (int i = foundIndex; i < currentRowCount - 1; i++) {
         sheet[i] = sheet[i + 1];
     }
 
-    currentRowCount--;
+    currentRowCount--; // Reduce row count
 
-    cout << "Row deleted successfully." << endl;
+    cout << "Row deleted successfully." << endl; //Confirm successful deletion
 }
 
 void countRows() {
