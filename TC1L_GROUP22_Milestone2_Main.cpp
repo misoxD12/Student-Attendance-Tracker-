@@ -384,7 +384,7 @@ void updateRow() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
 
     string searchTerm;
-    cout << "Enter " << columns[0].name << " to update: ";
+    cout << "Enter " << columns[0].name << " to search: ";
     getline(cin, searchTerm);
 
     // Search for the row
@@ -711,10 +711,12 @@ int main() {
 
             case 4:
                 updateRow();  
+                viewSheet();
                 break;
 
             case 5:
-                deleteRow();  
+                deleteRow(); 
+                viewSheet();
                 break;
 
             case 6:
