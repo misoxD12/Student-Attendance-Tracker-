@@ -242,12 +242,12 @@ string getSheetFileName() {
 
     //if somehow term is missing, just use sheetname
     else if (termName.empty()) {
-        return sheetName + ".csv";
+        return sheetName + ".csv"; // return the sheet name with .csv
     }
 
     //combine them: 2530_Week1.csv
     else{
-        return termName + "_" + sheetName + ".csv"; 
+        return termName + "_" + sheetName + ".csv"; // return the sheet name with .csv
     }
     
 }
@@ -259,7 +259,7 @@ string getDatabaseFileName() {
     }
 
     else{
-        return termName + ".csv";
+        return termName + ".csv"; // return term name with .csv
     }
      
 }
@@ -273,22 +273,23 @@ void allTerms() {
     string line;
 
     bool exists = false;
-
+// Check if the master file exists and is accessible
     if (inputTerm.is_open()) {
+        // Read the file line by line to see if current termName is already listed
         while (getline(inputTerm, line)) {
             if (line == termName) { 
-                exists = true;
+                exists = true; // Term found, no need to add it again
                 break;
             }
         }
         inputTerm.close();
     }
 
-    //If not found append it
+    //If not found then we append it
     if (!exists) {
-        ofstream outFile(MASTER_TERM, ios::app);
+        ofstream outFile(MASTER_TERM, ios::app); // open as append mode
         if (outFile.is_open()) {
-            outFile << termName << endl;
+            outFile << termName << endl; // Write the new term name
             outFile.close();
         }
     }
@@ -304,13 +305,13 @@ void databaseIndex(){
     ifstream inputFile(dbfile);
     //store each line
     string line;
-    bool Existsornot = false;
+    bool Existsornot = false; // to see if alr in listed or not 
 
     if(inputFile.is_open()){
         while (getline(inputFile, line)){
-            if(line == sheetentryname){
+            if(line == sheetentryname){ // check if the input the user gave alr exist in the term csv we have
                 Existsornot = true;
-                break;
+                break; // stop if found
             }
         }
         inputFile.close();
@@ -318,16 +319,16 @@ void databaseIndex(){
     }
     
     //if not exists, append it
-    if(!Existsornot){
-        ofstream outputFile(dbfile, ios::app);
+    if(!Existsornot){ // // if dun have yet (meaining is a new one) we add on to the list 
+        ofstream outputFile(dbfile, ios::app); // append to avoid overwrite the stuff inside
 
         if(outputFile.is_open()){
-            outputFile << sheetentryname << endl;
+            outputFile << sheetentryname << endl; // add new one 
             outputFile.close();
             cout << "Database Added " << sheetentryname << " to database index " << dbfile << ".\n";
         }
         else{
-            cout << "Error. Unable to update file.\n";
+            cout << "Error. Unable to update file.\n"; // show error if got issue when saving
         }
     }
 }
@@ -342,7 +343,7 @@ void createTerm() {
 
     cout << "\nExisting Terms:\n";
 
-    ifstream inFile(MASTER_TERM);
+    ifstream inFile(MASTER_TERM); // to display all terms avalable 
     if (inFile.is_open()) {
         string line;
         while(getline(inFile, line)) {
@@ -356,7 +357,7 @@ void createTerm() {
     cout << "\n-------------------------------------------";
     cout << "\nEnter term name (e.g. 2530): ";
 
-    //validation
+    //make sure the user enters a valid termName 
     do {
         getline(cin, termName);
         if (termName.empty() || termName.find_first_not_of(' ') == string::npos) {
@@ -368,7 +369,7 @@ void createTerm() {
     allTerms();
 
     ofstream dbFile(getDatabaseFileName(), ios::app); 
-    dbFile.close();
+    dbFile.close(); // ensure that the term file is created if it isnt 
     
     cout << "Database \"" << termName << "\" created/loaded (Index: " << getDatabaseFileName() << ").\n";
     
@@ -513,7 +514,7 @@ void saveFile() {
     ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
-        cout << "Error: Could not save data to " << filename << endl;
+        cout << "Error: Could not save data to " << filename << endl; //if cant open we display error 
         return;
     }
 
@@ -529,7 +530,9 @@ void saveFile() {
     outputFile << "\n"; // New line after headers
 
     // --- Part B: Save Rows ---
+    // Outer loop: Go through each student row
     for (int i = 0; i < currentRowCount; i++) {
+        // Inner loop: Go through each cell (ID, Name, Date, etc.) for that specific student
         for (int j = 0; j < currentColCount; j++) {
             outputFile << sheet[i].cells[j];
             
@@ -566,34 +569,36 @@ void loadFile() {
         string colData;
         int colIdx = 0;
 
-        while (getline(ss, colData, ',')) {
+        while (getline(ss, colData, ',')) { //Break the line apart everywhere there is a comma
             // Logic to separate "Name" and "(TYPE)" 
             size_t openBracket = colData.find('(');
             size_t closeBracket = colData.find(')');
 
             if (openBracket != string::npos && closeBracket != string::npos) {
+                // Extract the name (everything BEFORE the bracket)
                 columns[colIdx].name = colData.substr(0, openBracket);
                 // Clean up trailing space in name
                 if (columns[colIdx].name.back() == ' ') columns[colIdx].name.pop_back();
-                
+                // Extract the type (everything BETWEEN the brackets)                
                 columns[colIdx].type = colData.substr(openBracket + 1, closeBracket - openBracket - 1);
             }
             colIdx++;
         }
-        currentColCount = colIdx;
+        currentColCount = colIdx; // Record how many columns we found
     }
 
     // --- Part B: Load the Student Rows ---
+    // Read every remaining line in the file
     while (getline(inputFile, line) && currentRowCount < MAX_ROWS) {
         stringstream ss(line);
         string cellData;
         int colIdx = 0;
-
+        // Split each line by commas and put it into the 'sheet' array
         while (getline(ss, cellData, ',') && colIdx < currentColCount) {
             sheet[currentRowCount].cells[colIdx] = cellData;
             colIdx++;
         }
-        currentRowCount++;
+        currentRowCount++; //Move to the next student row 
     }
 
     inputFile.close();
@@ -621,7 +626,7 @@ void loadOrCreateSheet() {
             if (!line.empty())
             {
                 cout << " - " << line << "\n";
-                sheetExists = true;
+                sheetExists = true; // if file got content chanfe to true 
             }
         }
         databaseInput.close();   
@@ -633,7 +638,7 @@ void loadOrCreateSheet() {
 
     cout << "\nEnter sheet name to open (e.g. Week1) or create a new one: ";
 
-    //validation
+    //make sure that the sheet input is not empty 
     do {
         getline(cin, sheetName);
         if (sheetName.empty() || sheetName.find_first_not_of(' ') == string::npos) {
@@ -654,7 +659,7 @@ void loadOrCreateSheet() {
     else {
         checkFile.close();
         cout << "\nNew sheet detected! Let's define your columns first.\n";
-        defineColumns(); 
+        defineColumns(); // ask user to define column if its new 
     }
 
     //Call index function to record this sheet into the Term CSV
