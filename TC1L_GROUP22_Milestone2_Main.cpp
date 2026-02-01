@@ -234,7 +234,7 @@ void viewSheet() {
 
 //Milestone 2 Functions
 
-//generate attancande sheet 
+//generate attendance sheet 
 string getSheetFileName() {
     if (sheetName.empty()) {
         return ""; 
@@ -266,6 +266,7 @@ string getDatabaseFileName() {
     
 
 void allTerms() {
+    //function to update the Master List of all terms
 
     //Check if Term in the master list
     ifstream inputTerm(MASTER_TERM);
@@ -294,6 +295,8 @@ void allTerms() {
 }
 
 void databaseIndex(){ 
+    //function to update the database index for each term
+
     //string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
     string sheetentryname = sheetName;
@@ -314,7 +317,7 @@ void databaseIndex(){
 
     }
     
-
+    //if not exists, append it
     if(!Existsornot){
         ofstream outputFile(dbfile, ios::app);
 
@@ -330,12 +333,15 @@ void databaseIndex(){
 }
 
 void createTerm() {
+    //function to create a new term
+
     cout << "\n==============================================\n";
     cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2\n";
     cout << "==============================================\n";
     cout << "Create School Term (Database)";
 
-     cout << "\nExisting Terms:\n";
+    cout << "\nExisting Terms:\n";
+
     ifstream inFile(MASTER_TERM);
     if (inFile.is_open()) {
         string line;
@@ -350,6 +356,7 @@ void createTerm() {
     cout << "\n-------------------------------------------";
     cout << "\nEnter term name (e.g. 2530): ";
 
+    //validation
     do {
         getline(cin, termName);
         if (termName.empty() || termName.find_first_not_of(' ') == string::npos) {
@@ -592,6 +599,8 @@ void loadFile() {
 }
 
 void loadOrCreateSheet() {
+    //function to load or create attendance sheet
+
     cout << "\n-------------------------------------------";
     cout << "\nLoad or Create Sheet";
     cout << "\n-------------------------------------------\n";
@@ -622,6 +631,7 @@ void loadOrCreateSheet() {
 
     cout << "\nEnter sheet name to open (e.g. Week1) or create a new one: ";
 
+    //validation
     do {
         getline(cin, sheetName);
         if (sheetName.empty() || sheetName.find_first_not_of(' ') == string::npos) {
@@ -645,7 +655,7 @@ void loadOrCreateSheet() {
         defineColumns(); 
     }
 
-    //Call your index function to record this sheet into the Term CSV
+    //Call index function to record this sheet into the Term CSV
     databaseIndex(); 
 }
 
