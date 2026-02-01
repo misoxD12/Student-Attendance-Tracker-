@@ -30,7 +30,8 @@ using namespace std;
 //Constants 
 const int MAX_ROWS = 100; //Max students
 const int MAX_COLS = 10;  //Max columns
-const string MASTER_TERM = "Allterms.csv";
+
+const string MASTER_TERM = "AllTerms.csv";
 
 struct AttendanceRow {
     string cells[MAX_COLS]; //Stores cell values for each column in a row
@@ -52,6 +53,7 @@ string termName = "";
 
 //Milestone 1 Functions
 
+/*
 void initializeSheet() {
     cout << "\n===========================================\n";
     cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 1\n";
@@ -62,6 +64,7 @@ void initializeSheet() {
     
     //cout << "Attendance sheet \"" << sheetName << "\" created successfully.\n";
 }
+*/
 
 void defineColumns() { 
 
@@ -231,19 +234,39 @@ void viewSheet() {
 
 //Milestone 2 Functions
 
-//generate attancande sheet 
+//generate attendance sheet 
 string getSheetFileName() {
-    return sheetName + ".csv"; // return the sheet name with .csv
+    if (sheetName.empty()) {
+        return ""; 
+    } 
+
+    //if somehow term is missing, just use sheetname
+    else if (termName.empty()) {
+        return sheetName + ".csv";
+    }
+
+    //combine them: 2530_Week1.csv
+    else{
+        return termName + "_" + sheetName + ".csv"; 
+    }
+    
 }
 
 //generate term database 
 string getDatabaseFileName() {
-    return termName + ".csv"; // return term name with .csv
-    
-}
+    if (termName.empty()) {
+        return "";
+    }
 
-void displayTerms() {
-    ifstream InputFile(MASTER_TERM);
+    else{
+        return termName + ".csv";
+    }
+     
+}
+    
+
+void allTerms() {
+    //function to update the Master List of all terms
 
     // If file doesn't exist, we create it
     if (!InputFile.is_open()) {
@@ -271,15 +294,16 @@ void displayTerms() {
             }
         }
     }
-    
-    InputFile.close();
 }
 
+void databaseIndex(){ 
+    //function to update the database index for each term
 
 
 void databaseIndex(){ // 
     string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
+    string sheetentryname = sheetName;
 
     ifstream inputFile(dbfile);
     //store each line
@@ -293,6 +317,7 @@ void databaseIndex(){ //
                 break; // stop if found 
             }
         }
+        inputFile.close();
 
     }
     inputFile.close();
@@ -303,7 +328,7 @@ void databaseIndex(){ //
         if(outputFile.is_open()){
             outputFile << sheetfile << endl; // add the new one 
             outputFile.close();
-            cout << "Database Added " << sheetfile << " to database index " << dbfile << ".\n";
+            cout << "Database Added " << sheetentryname << " to database index " << dbfile << ".\n";
         }
         else{
             cout << "Error. Unable to update file.\n"; // show error if got issue when saving 
@@ -364,7 +389,7 @@ void updateRow() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
 
     string searchTerm;
-    cout << "Enter " << columns[0].name << " to update: ";
+    cout << "Enter " << columns[0].name << " to search: ";
     getline(cin, searchTerm);
 
     // Search for the row
@@ -422,23 +447,24 @@ void updateRow() {
             getline(cin, sheet[rowIndex].cells[colIndex]);
         }
 
-        cout << "Field updated successfully.\n";
+        cout << "Row updated successfully.\n";
 
-        cout << "Do you want to update another field for this student? (Y/N): ";
+        cout << "Do you want to update another data for this row? (Y/N): ";
         cin >> continueChoice;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     } while (continueChoice == 'Y' || continueChoice == 'y');
 
-    cout << "Finished updating student record.\n";
+    cout << "Data is updated.\n";
 }
 
 void deleteRow() {
+    // Check if sheet is empty
     if (currentRowCount == 0) {
         cout << "Error: Sheet is empty. Nothing to delete." << endl;
         return;
     }
-
+    // Clear input buffer before getline
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     string searchTerm;
@@ -446,7 +472,7 @@ void deleteRow() {
     cout << "-------------------------------------------" << endl;
     cout << "Delete Attendance Row" << endl;
     cout << "-------------------------------------------" << endl;
-    cout << "Enter StudentID to delete: ";
+    cout << "Enter " << columns[0].name  << " to delete: ";
     getline(cin, searchTerm);
 
     int foundIndex = -1;
@@ -459,20 +485,20 @@ void deleteRow() {
         }
     }
 
-    // If StudentID not found
+    // If StudentID not found, show error and exit
     if (foundIndex == -1) {
         cout << "Error: StudentID does not exist." << endl;
         return;
     }
 
-    // Delete whole row by shifting array upward
+    // Shift rows up to delete whole row
     for (int i = foundIndex; i < currentRowCount - 1; i++) {
         sheet[i] = sheet[i + 1];
     }
 
-    currentRowCount--;
+    currentRowCount--; // Reduce row count
 
-    cout << "Row deleted successfully." << endl;
+    cout << "Row deleted successfully." << endl; //Confirm successful deletion
 }
 
 void countRows() {
@@ -581,14 +607,18 @@ void loadFile() {
 }
 
 void loadOrCreateSheet() {
+    //function to load or create attendance sheet
+
     cout << "\n-------------------------------------------";
     cout << "\nLoad or Create Sheet";
     cout << "\n-------------------------------------------" << endl; // ui stuff 
 
     string dbFile = getDatabaseFileName();
-    ifstream inputFile(dbFile);
+    ifstream databaseInput(dbFile);
 
-    if (inputFile.is_open()) {
+    bool sheetExists = false;
+
+    if (databaseInput.is_open()) {
         cout << "Available Sheets in " << termName << ":\n";
         string line;
         bool hasContent = false;
@@ -613,17 +643,18 @@ int main() {
 
     int choice;
 
-    vieworcreateTerm(); 
+    createTerm(); 
 
     loadOrCreateSheet();
 
     
-    initializeSheet();
+    //initializeSheet();
 
     //Main menu
     do {
         cout << "\n-------------------------------------------";
         cout << "\nMAIN MENU";
+        cout << "\nCurrent Term: " << termName;
         cout << "\nCurrent Sheet: " << sheetName;
         cout << "\n-------------------------------------------";
         cout << "\n1. Define Columns";
@@ -659,10 +690,12 @@ int main() {
 
             case 4:
                 updateRow();  
+                viewSheet();
                 break;
 
             case 5:
-                deleteRow();  
+                deleteRow(); 
+                viewSheet();
                 break;
 
             case 6:
