@@ -245,24 +245,24 @@ string getDatabaseFileName() {
 void displayTerms() {
     ifstream InputFile(MASTER_TERM);
 
-    // 1. If file doesn't exist, try to create it
+    // If file doesn't exist, we create it
     if (!InputFile.is_open()) {
         ofstream CreateFile(MASTER_TERM);
         if (CreateFile.is_open()) {
-            cout << "[System: Main Index created for the first time]\n";
+            cout << "[System: Main Index created for the first time]\n"; // prompt that its the first creation 
             CreateFile.close();
         } else {
-            cout << "[Error: Could not create system file. Check folder permissions]\n";
+            cout << "[Error: Could not create system file. Check folder permissions]\n"; // if got issue and cannot be made 
         }
         cout << "No terms have been created yet.\n";
-        return; // Exits the function early
+        return; 
     }
 
-    // 2. If file exists, check if it is empty
+    // If file exists, check if empty (cuz if empty then nothing to show user)
     if (InputFile.peek() == ifstream::traits_type::eof()) {
         cout << "No terms have been created yet.\n";
     } 
-    // 3. If file has data, display it
+    // If got data in file,show it
     else {        
         string line;
         while (getline(InputFile, line)) {
@@ -277,7 +277,7 @@ void displayTerms() {
 
 
 
-void databaseIndex(){ // *********************************************************************
+void databaseIndex(){ // 
     string sheetfile = getSheetFileName();
     string dbfile = getDatabaseFileName();
 
@@ -311,7 +311,7 @@ void databaseIndex(){ // *******************************************************
     }
 }
 
-string strip(const string& s) {
+string strip(const string& s) { // fucntion to strip whitespaces 
     size_t first = s.find_first_not_of(" \t\r\n");
     if (string::npos == first) return ""; // String is all whitespace
     size_t last = s.find_last_not_of(" \t\r\n");
