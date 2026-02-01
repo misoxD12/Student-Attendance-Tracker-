@@ -700,11 +700,13 @@ int main() {
                 break;
 
             case 4:
-                updateRow();  
+                updateRow();
+                viewSheet();  
                 break;
 
             case 5:
-                deleteRow();  
+                deleteRow();
+                viewSheet();  
                 break;
 
             case 6:
