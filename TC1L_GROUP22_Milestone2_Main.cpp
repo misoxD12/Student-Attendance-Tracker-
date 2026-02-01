@@ -284,48 +284,52 @@ void databaseIndex(){ //
     ifstream inputFile(dbfile);
     //store each line
     string line;
-    bool Existsornot = false; 
+    bool Existsornot = false; // to see if alr in listed or not 
 
     if(inputFile.is_open()){
-        while (getline(inputFile, line)){
-            if(line == sheetfile){
+        while (getline(inputFile, line)){ 
+            if(line == sheetfile){ // check if the input the user gave alr exist in the term csv we have 
                 Existsornot = true;
-                break;
+                break; // stop if found 
             }
         }
 
     }
     inputFile.close();
 
-    if(!Existsornot){
-        ofstream outputFile(dbfile, ios::app);
+    if(!Existsornot){ // if dun have yet (meaining is a new one) we add on to the list 
+        ofstream outputFile(dbfile, ios::app); // append to avoid overwrite the stuff inside 
 
         if(outputFile.is_open()){
-            outputFile << sheetfile << endl;
+            outputFile << sheetfile << endl; // add the new one 
             outputFile.close();
             cout << "Database Added " << sheetfile << " to database index " << dbfile << ".\n";
         }
         else{
-            cout << "Error. Unable to update file.\n";
+            cout << "Error. Unable to update file.\n"; // show error if got issue when saving 
         }
     }
 }
 
 string strip(const string& s) { // fucntion to strip whitespaces 
+    //Find the index of the FIRST character that is NOT a space, tab, or newline
     size_t first = s.find_first_not_of(" \t\r\n");
-    if (string::npos == first) return ""; // String is all whitespace
+    //If cannot find any non-whitespace characters 
+    if (string::npos == first) return ""; // means is empty
+    //Find the index of the LAST character that is NOT any kind of whitespace 
     size_t last = s.find_last_not_of(" \t\r\n");
+    // return back the data from the first non whitespace to last non whitespace
     return s.substr(first, (last - first + 1));
 }
 
-void vieworcreateTerm() {
+void vieworcreateTerm() { // display the output 
     cout << "\n==========================================="<< endl;
     cout << "   STUDENT ATTENDANCE TRACKER - MILESTONE 2"<< endl;
     cout << "==========================================="<< endl;
     cout << "Create School Term (Database)" << endl;
     cout << "\n-------------------------------------------" << endl;
     cout << "All existing terms: " << endl;
-    displayTerms();
+    displayTerms(); // display all the avaliable terms 
     cout << "\nEnter term name: " ;
     getline(cin, termName);
     termName = strip(termName);
@@ -333,21 +337,20 @@ void vieworcreateTerm() {
     ifstream DURIAN(MASTER_TERM);
     string line;
     while(getline(DURIAN, line)) {
-        if(line == termName) exists = true;
+        if(line == termName) exists = true; // check if alr got match based on the csv  
     }
     DURIAN.close();
 
     if(!exists) {
-        ofstream BANANA(MASTER_TERM, ios::app);
+        ofstream BANANA(MASTER_TERM, ios::app); // append to the csv if dont have 
         BANANA << termName << endl;
         BANANA.close();
     }
 
     //check or create
-    ofstream outputFile(getDatabaseFileName(), ios::app); 
-    outputFile.close();
+    ofstream outputFile(getDatabaseFileName(), ios::app); // open file in append mode 
+    outputFile.close(); // close it straight away so that (bascially make sure the term file is created)
     cout << "Database " << termName <<" created and loaded"<< endl;
-    // getfilename here 
     cout << "Reading attendance data from file..."<< endl;
 
 }
@@ -481,17 +484,16 @@ void saveFile() {
     // Get the specific filename for the current sheet
     string filename = getSheetFileName();
     
-    // Open the file for writing (ios::out is default for ofstream)
     // Note: We don't use ios::app here because we want to overwrite 
     // the file with the most recent version of the data.
     ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
-        cout << "Error: Could not save data to " << filename << endl;
+        cout << "Error: Could not save data to " << filename << endl; //if cant open we display error 
         return;
     }
 
-    // --- Part A: Save Headers ---
+    // --- Part A: Save Headers of the data---
     for (int i = 0; i < currentColCount; i++) {
         outputFile << columns[i].name << " (" << columns[i].type << ")";
         
@@ -503,7 +505,9 @@ void saveFile() {
     outputFile << "\n"; // New line after headers
 
     // --- Part B: Save Rows ---
+    // Outer loop: Go through each student row
     for (int i = 0; i < currentRowCount; i++) {
+        // Inner loop: Go through each cell (ID, Name, Date, etc.) for that specific student
         for (int j = 0; j < currentColCount; j++) {
             outputFile << sheet[i].cells[j];
             
@@ -536,38 +540,40 @@ void loadFile() {
     
     // --- Part A: Load the Header (First Line) ---
     if (getline(inputFile, line)) {
-        stringstream ss(line);
+        stringstream ss(line); /// Turn the line into a stream
         string colData;
         int colIdx = 0;
 
-        while (getline(ss, colData, ',')) {
+        while (getline(ss, colData, ',')) { //Break the line apart everywhere there is a comma
             // Logic to separate "Name" and "(TYPE)" 
             size_t openBracket = colData.find('(');
             size_t closeBracket = colData.find(')');
 
             if (openBracket != string::npos && closeBracket != string::npos) {
+                // Extract the name (everything BEFORE the bracket)
                 columns[colIdx].name = colData.substr(0, openBracket);
                 // Clean up trailing space in name
                 if (columns[colIdx].name.back() == ' ') columns[colIdx].name.pop_back();
-                
+                // Extract the type (everything BETWEEN the brackets)
                 columns[colIdx].type = colData.substr(openBracket + 1, closeBracket - openBracket - 1);
             }
             colIdx++;
         }
-        currentColCount = colIdx;
+        currentColCount = colIdx; // Record how many columns we found
     }
 
     // --- Part B: Load the Student Rows ---
+    // Read every remaining line in the file
     while (getline(inputFile, line) && currentRowCount < MAX_ROWS) {
         stringstream ss(line);
         string cellData;
         int colIdx = 0;
-
+        // Split each line by commas and put it into the 'sheet' array
         while (getline(ss, cellData, ',') && colIdx < currentColCount) {
             sheet[currentRowCount].cells[colIdx] = cellData;
             colIdx++;
         }
-        currentRowCount++;
+        currentRowCount++; //Move to the next student row
     }
 
     inputFile.close();
@@ -577,7 +583,7 @@ void loadFile() {
 void loadOrCreateSheet() {
     cout << "\n-------------------------------------------";
     cout << "\nLoad or Create Sheet";
-    cout << "\n-------------------------------------------" << endl;
+    cout << "\n-------------------------------------------" << endl; // ui stuff 
 
     string dbFile = getDatabaseFileName();
     ifstream inputFile(dbFile);
@@ -587,18 +593,18 @@ void loadOrCreateSheet() {
         string line;
         bool hasContent = false;
         while(getline(inputFile, line)) {
-            cout << " - " << line << "\n";
-            hasContent = true;
+            cout << " - " << line << "\n"; 
+            hasContent = true; // if file got content chanfe to true 
         }
-        if (!hasContent) cout << " [No sheets in this term yet]\n";
+        if (!hasContent) cout << " [No sheets in this term yet]\n"; // if file is empty 
         inputFile.close();   
     }
 
     cout << "\nEnter sheet name to open (e.g. Week1) or create a new one: ";
     getline(cin, sheetName);
-    loadFile();
+    loadFile(); // get the data from csv 
 
-    // Call your index function to record this sheet into the Term CSV
+    // Call index function to record this sheet into the Term CSV
     databaseIndex(); 
 }
 
