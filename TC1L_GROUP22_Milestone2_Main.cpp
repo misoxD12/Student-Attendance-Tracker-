@@ -10,10 +10,10 @@
 // Member_4: 252UC241NW | HARSIMRANJEET SINGH SRAU A/L GURDEV SINGH |  HARSIMRANJEET.SINGH.SRAU1@student.mmu.edu.my | 011-11928326
 // *********************************************************
 // Task Distribution (Milestone 2 - Technical Breakdown)
-// Member_1:
-// Member_2:
-// Member_3:
-// Member_4:
+// Member_1: Implement Database Logic (Term/Sheet), Helper Functions, Count Row Logic & Code Refinement
+// Member_2: Implement Delete Row Logic (Linear Search & Array Shifting)
+// Member_3: Implement Update Row Logic (Search Algorithm & Multi-Column Modification Loop)
+// Member_4: Implement File Persistence Logic (Save/Load CSV Streams & String Parsing) & Code Refinement
 // *********************************************************
 
 
@@ -546,6 +546,10 @@ void saveFile() {
     }
 
     outputFile.close();
+
+    //Call index function to record this sheet into the Term CSV
+    databaseIndex(); 
+
     cout << "Successfully saved to " << filename << ".\n";
 }
 
@@ -611,6 +615,7 @@ void loadOrCreateSheet() {
 
     cout << "\n-------------------------------------------";
     cout << "\nLoad or Create Sheet";
+    cout << "\nWarning: any inappropriate closing ways will cause sheet no saving!\n";
     cout << "\n-------------------------------------------\n";
 
     //Show available sheets 
@@ -661,11 +666,9 @@ void loadOrCreateSheet() {
     else {
         checkFile.close();
         cout << "\nNew sheet detected! Let's define your columns first.\n";
-        defineColumns(); // ask user to define column if its new 
+        defineColumns(); // ask user to define column if its new
     }
 
-    //Call index function to record this sheet into the Term CSV
-    databaseIndex(); 
 }
 
 //MAIN
