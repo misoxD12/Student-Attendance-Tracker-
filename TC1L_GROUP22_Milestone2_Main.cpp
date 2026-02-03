@@ -11,8 +11,8 @@
 // *********************************************************
 // Task Distribution (Milestone 2 - Technical Breakdown)
 // Member_1: Implement Database Logic (Term/Sheet), Helper Functions, Count Row Logic & Code Refinement
-// Member_2: Implement Delete Row Logic (Linear Search & Array Shifting)
-// Member_3: Implement Update Row Logic (Search Algorithm & Multi-Column Modification Loop)
+// Member_2: Implement Update Row Logic (Search Algorithm & Multi-Column Modification Loop)
+// Member_3: Implement Delete Row Logic (Linear Search & Array Shifting)
 // Member_4: Implement File Persistence Logic (Save/Load CSV Streams & String Parsing) & Code Refinement
 // *********************************************************
 
